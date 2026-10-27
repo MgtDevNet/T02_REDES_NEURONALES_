@@ -1,10 +1,10 @@
-# Tema de la aplicación web (estilo bancario: azul marino, superficies claras)
+# Tema de la aplicación web (morado, superficies claras; tipografía Inter en app/estilo.py)
 [theme]
 base = "light"
-primaryColor = "#0b4f9c"
-backgroundColor = "#f4f6f9"
+primaryColor = "#7b2cbf"
+backgroundColor = "#f7f4fb"
 secondaryBackgroundColor = "#ffffff"
-textColor = "#0b1f33"
+textColor = "#2d0a4e"
 font = "sans serif"
 
 [client]

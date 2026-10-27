@@ -10,8 +10,9 @@ Carga un modelo guardado por entrenar_pd.py (no reentrena) y, para un solicitant
 
 import configparser
 import json
+import math
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import joblib
@@ -39,6 +40,7 @@ class Campo:
     defecto: float = 0
     opciones: dict | None = None       # categóricas: valor del modelo -> texto
     unidad: str = ""
+    tope: str = ""                     # "240.000 USD": desde ahí el modelo no distingue valores mayores
 
 
 # Rangos dentro de lo visto en entrenamiento (metadata["rangos"]); dti se limita a 29.99
@@ -77,13 +79,13 @@ CAMPOS = {
 }
 
 # Bandas por percentil de la población, de mejor a peor. El color de estado va siempre con
-# ícono y texto, nunca solo.
+# ícono (Material Symbols) y texto, nunca solo.
 BANDAS = [
-    (80, "Excelente", "#0ca30c", "✔"),
-    (60, "Bueno", "#0ca30c", "✔"),
-    (40, "Promedio", "#fab219", "●"),
-    (20, "Por mejorar", "#ec835a", "▲"),
-    (0, "Riesgo alto", "#d03b3b", "✖"),
+    (80, "Excelente", "#0ca30c", "verified"),
+    (60, "Bueno", "#0ca30c", "check_circle"),
+    (40, "Promedio", "#c98500", "remove_circle"),
+    (20, "Por mejorar", "#ec835a", "trending_down"),
+    (0, "Riesgo alto", "#d03b3b", "error"),
 ]
 
 
@@ -156,6 +158,32 @@ class Modelo:
     def resumen_poblacion(self):
         return {"n": len(self.poblacion), "mediana": float(np.median(self.poblacion)),
                 "p05": float(np.percentile(self.poblacion, 5)), "p95": float(np.percentile(self.poblacion, 95))}
+
+
+def campos_del_modelo(modelo):
+    """CAMPOS con el máximo de cada control en el tope que aprendió el modelo.
+
+    El preprocesador recorta varias variables en el percentil 99 de train (topes_): para el
+    modelo, 2 moras y 10 moras son lo mismo. Ofrecer valores por encima del tope haría que el
+    puntaje no cambie y el simulador mostrara una curva plana, así que el máximo del control
+    queda en el tope ("tope o más"). Se lee del modelo guardado: si se reentrena, se ajusta solo.
+    Los conteos con tope pequeño (p. ej. moras: 0, 1, "2 o más") se vuelven una lista.
+    """
+    campos = dict(CAMPOS)
+    for var, tope in modelo.preprocesador.topes_.items():
+        c = campos[var]
+        escala = 12 if var == "antig_credito_meses" else 1
+        maximo = math.ceil(tope / escala / c.paso) * c.paso
+        if maximo >= c.maximo:
+            continue
+        texto = f"{maximo:,.0f}".replace(",", ".") + (f" {c.unidad}" if c.unidad else "")
+        ayuda = f"{c.ayuda} El modelo trata igual cualquier valor desde {texto}, por eso el máximo es «{texto} o más»."
+        if maximo <= 3 and float(c.paso).is_integer():
+            opciones = {k: str(k) for k in range(int(maximo))} | {int(maximo): f"{int(maximo)} o más"}
+            campos[var] = replace(c, maximo=maximo, defecto=min(c.defecto, maximo), opciones=opciones, ayuda=ayuda)
+        else:
+            campos[var] = replace(c, maximo=maximo, defecto=min(c.defecto, maximo), ayuda=ayuda, tope=texto)
+    return campos
 
 
 def solicitante_por_defecto():

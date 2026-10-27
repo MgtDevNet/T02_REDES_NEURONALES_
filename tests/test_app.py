@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 from streamlit.testing.v1 import AppTest
 
-from app.motor import CAMPOS, RAIZ, Modelo, banda, leer_config_app, solicitante_por_defecto
+from app.motor import CAMPOS, RAIZ, Modelo, banda, campos_del_modelo, leer_config_app, solicitante_por_defecto
 
 
 @pytest.fixture(scope="module")
@@ -59,3 +59,24 @@ def test_simulador_y_cambio_de_modelo():
     at.radio(key="modelo_elegido").set_value("Red neuronal (comparación)").run()
     assert not at.exception
     assert np.isfinite(float(at.metric[0].value))
+
+
+def test_controles_llegan_justo_al_tope_del_modelo(logistica):
+    campos = campos_del_modelo(logistica)
+    for var, tope in logistica.preprocesador.topes_.items():
+        c = campos[var]
+        escala = 12 if var == "antig_credito_meses" else 1
+        assert tope <= c.maximo * escala < tope + c.paso * escala, var    # alcanza el tope, sin pasarse
+        assert c.minimo <= c.defecto <= c.maximo
+    assert campos["delinq_2yrs"].opciones == {0: "0", 1: "1", 2: "2 o más"}
+    # por encima del tope el puntaje ya no cambia: por eso no se ofrece
+    s = solicitante_por_defecto()
+    assert np.ptp(logistica.barrido(s, "delinq_2yrs", [2, 5, 10])) == pytest.approx(0)
+
+
+def test_simular_moras_con_lista():
+    at = AppTest.from_file(str(RAIZ / "app/evaluar.py"), default_timeout=60).run()
+    at.selectbox(key="var_simulada").set_value("delinq_2yrs").run()
+    at.selectbox(key="nuevo_delinq_2yrs").set_value(2).run()
+    assert not at.exception
+    assert float(at.metric[0].delta.split()[0]) < 0
