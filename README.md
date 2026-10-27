@@ -47,8 +47,8 @@ a ejecutar; no hay que tocar el código.
 python preparar_datos_pd.py          # loan.csv -> data/processed/pd_limpio.parquet (ya incluido en el repo)
 python entrenar_pd.py                # MLP final -> models/pd
 python entrenar_pd.py --set red.capas_ocultas= --set red.dropout=0 \
-                      --set salida.carpeta=models/pd_logistica      # regresión logística de referencia
-python evaluar_pd.py                 # métricas en prueba y figuras (sin reentrenar)
+                      --set salida.carpeta=models/pd_logistica      # logística en NumPy (la usa la app)
+python evaluar_pd.py                 # prueba: MLP frente a la logística de Primer_Punto.ipynb (sin reentrenar)
 python interpretar_pd.py             # importancia por permutación y dependencia parcial
 python scorecard_pd.py               # puntos por variable (logística); --modelo models/pd para la red
 python buscar_hiperparametros_pd.py  # búsqueda aleatoria (~10 min) -> reports/busqueda_pd.csv

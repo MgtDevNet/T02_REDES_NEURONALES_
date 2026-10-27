@@ -1,0 +1,3 @@
+modelo,referencia,repeticiones,metrica,diferencia,ic95_inf,ic95_sup,prop_modelo_mejor
+MLP 64-32,Regresión logística (referencia),1000,auc,-0.003252763044694018,-0.006246036017175169,-0.00037966246510911855,0.013
+MLP 64-32,Regresión logística (referencia),1000,brier,5.3429673887758766e-05,-0.00011220821474706259,0.00021822568875748158,0.261
