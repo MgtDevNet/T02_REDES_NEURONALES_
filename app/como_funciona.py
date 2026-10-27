@@ -5,6 +5,7 @@ import pandas as pd
 import streamlit as st
 
 from estilo import aplicar_estilo, barra_lateral, cargar_modelo, encabezado
+from formato import numero, porcentaje
 from motor import RAIZ
 
 aplicar_estilo()
@@ -31,7 +32,8 @@ tabla = (d.groupby("particion")["y"].agg(["size", "mean"]).reindex(["train", "va
                         "test": "Prueba final (jul – dic 2012)"}))
 tasa_train, tasa_test = tabla["mean"].iloc[0], tabla["mean"].iloc[2]
 tabla.columns = ["Créditos", "Tasa de malos"]
-tabla["Tasa de malos"] = (tabla["Tasa de malos"] * 100).map("{:.1f} %".format)
+tabla["Tasa de malos"] = tabla["Tasa de malos"].map(porcentaje)
+tabla["Créditos"] = tabla["Créditos"].map(numero)
 st.table(tabla)
 st.markdown("""
 - **Solo créditos a 36 meses.** Los datos llegan hasta diciembre de 2015 y muchos créditos a 60 meses
@@ -48,8 +50,8 @@ por cada malo, y cada **{s['pdo']} puntos** esa proporción se duplica.
 """)
 st.latex(r"\text{odds} = \frac{1 - PD}{PD} \qquad "
          r"\text{puntaje} = \text{offset} + \text{factor} \cdot \ln(\text{odds})")
-st.latex(rf"\text{{factor}} = \frac{{PDO}}{{\ln 2}} = {s['factor']:.2f} \qquad "
-         rf"\text{{offset}} = {s['puntaje_base']} - \text{{factor}} \cdot \ln({s['odds_base']}) = {s['offset']:.2f}")
+st.latex(rf"\text{{factor}} = \frac{{PDO}}{{\ln 2}} = {numero(s['factor'], 2).replace(',', '{,}')} \qquad "
+         rf"\text{{offset}} = {s['puntaje_base']} - \text{{factor}} \cdot \ln({s['odds_base']}) = {numero(s['offset'], 2).replace(',', '{,}')}")
 st.markdown("""
 Con la regresión logística el riesgo es una suma de efectos, así que el puntaje se reparte
 **exactamente** en puntos por característica: cada una te suma o te resta frente a un solicitante
@@ -64,9 +66,9 @@ for nombre, archivo, carpeta in (("Regresión logística", "semillas_pd_logistic
     if ruta.exists():
         r = pd.read_csv(ruta)
         filas.append({"Modelo": nombre,
-                      "AUC en prueba (media ± desv.)": f"{r['auc_test'].mean():.3f} ± {r['auc_test'].std():.3f}",
-                      "Brier": f"{r['brier_test'].mean():.4f}",
-                      "Parámetros": cargar_modelo(carpeta).metadata["parametros_entrenables"]})
+                      "AUC en prueba (media ± desv.)": f"{numero(r['auc_test'].mean(), 3)} ± {numero(r['auc_test'].std(), 3)}",
+                      "Brier": numero(r['brier_test'].mean(), 4),
+                      "Parámetros": numero(cargar_modelo(carpeta).metadata["parametros_entrenables"])})
 if filas:
     st.table(pd.DataFrame(filas).set_index("Modelo"))
 st.markdown("""
@@ -77,7 +79,7 @@ sus puntos no se pueden repartir exactamente por característica. Por eso el sim
 regresión logística; la red se puede elegir en el menú lateral para comparar.
 
 El **AUC** es la probabilidad de que el modelo le asigne más riesgo a un mal pagador que a un buen
-pagador escogidos al azar (0.5 = azar, 1 = perfecto). Con solo la información de la solicitud, los
+pagador escogidos al azar (0,5 = azar, 1 = perfecto). Con solo la información de la solicitud, los
 valores observados son modestos: el riesgo de crédito es difícil de predecir.
 """)
 
@@ -93,7 +95,7 @@ st.markdown(f"""
 ### 5. Limitaciones
 - Solo aplica a **créditos a 36 meses** y a perfiles parecidos a los de Lending Club entre 2007 y 2012.
 - La relación deuda / ingreso se limita a **30 %**, el máximo que el modelo vio al aprender.
-- El modelo aprendió con una tasa de malos de {tasa_train:.1%} y la prueba final tuvo {tasa_test:.1%}:
+- El modelo aprendió con una tasa de malos de {porcentaje(tasa_train)} y la prueba final tuvo {porcentaje(tasa_test)}:
   tiende a **subestimar levemente** el riesgo de épocas posteriores.
 - Es un **proyecto académico**: no es una oferta ni una decisión de crédito.
 """)

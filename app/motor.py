@@ -81,7 +81,7 @@ CAMPOS = {
 # Bandas por percentil de la población, de mejor a peor. El color de estado va siempre con
 # ícono (Material Symbols) y texto, nunca solo.
 BANDAS = [
-    (80, "Excelente", "#0ca30c", "verified"),
+    (80, "Excelente", "#067a06", "verified"),
     (60, "Bueno", "#0ca30c", "check_circle"),
     (40, "Promedio", "#c98500", "remove_circle"),
     (20, "Por mejorar", "#ec835a", "trending_down"),
@@ -155,6 +155,14 @@ class Modelo:
         filas = [{**entradas, variable: v} for v in valores]
         return self.evaluar(filas)["puntaje"].to_numpy()
 
+    def cortes_bandas(self):
+        """Puntaje donde empieza cada banda (percentiles 20, 40, 60 y 80 de la población) y
+        la escala del velocímetro (percentiles 0,5 y 99,5, redondeados a la decena)."""
+        cortes = {nombre: float(np.percentile(self.poblacion, p)) for p, nombre, *_ in BANDAS if p > 0}
+        minimo = 10 * np.floor(np.percentile(self.poblacion, 0.5) / 10)
+        maximo = 10 * np.ceil(np.percentile(self.poblacion, 99.5) / 10)
+        return cortes, float(minimo), float(maximo)
+
     def resumen_poblacion(self):
         return {"n": len(self.poblacion), "mediana": float(np.median(self.poblacion)),
                 "p05": float(np.percentile(self.poblacion, 5)), "p95": float(np.percentile(self.poblacion, 95))}
@@ -192,3 +200,52 @@ def solicitante_por_defecto():
     valores["antig_credito_meses"] = CAMPOS["antig_credito_meses"].defecto * 12
     valores["mths_since_last_delinq"] = None          # nunca ha estado en mora (lo más frecuente)
     return valores
+
+
+def _candidatos(variable, actual, campo):
+    """Un cambio realista por variable, en la dirección que reduce el riesgo y dentro del rango
+    del control (no se sugiere, por ejemplo, pasar de usar el 85 % del cupo al 10 %)."""
+    if variable == "revol_util":            # meta habitual: usar menos del 30 % del cupo
+        return [30] if actual > 30 else ([10] if actual > 10 else [])
+    if variable == "inq_last_6mths":
+        return [0] if actual > 0 else []
+    if variable == "dti":
+        return [round(actual - 5, 1)] if actual >= 5 else []
+    if variable == "revol_bal":
+        return [round(actual / 2, -2)] if actual >= 1000 else []
+    if variable == "loan_amnt":
+        return [v for v in (round(actual * 0.75 / 500) * 500,) if campo.minimo <= v < actual]
+    return []
+
+
+# Lo que una persona puede cambiar de verdad antes de pedir el crédito (no su historial pasado)
+ACCIONABLES = {
+    "revol_util": "Usar menos tu cupo rotativo: de {a} a {n}",
+    "inq_last_6mths": "Evitar nuevas consultas a tu historial: de {a} a {n}",
+    "dti": "Reducir tu deuda mensual frente a tu ingreso: de {a} a {n}",
+    "revol_bal": "Pagar parte de tus tarjetas: saldo de {a} a {n}",
+    "loan_amnt": "Pedir un monto menor: de {a} a {n}",
+}
+
+
+def mejoras(modelo, entradas, campos, formatear, maximo=3, minimo_puntos=1.0):
+    """Los cambios accionables que más suben el puntaje, calculados con el mismo modelo.
+
+    Para cada variable accionable se prueba un valor realista (p. ej. uso del cupo al 30 %)
+    dejando todo lo demás igual.
+    Devuelve una lista de (texto, puntos ganados, puntaje nuevo), de mayor a menor ganancia.
+    formatear(variable, valor) -> texto del valor con su unidad.
+    """
+    actual = float(modelo.evaluar(entradas)["puntaje"].iloc[0])
+    resultado = []
+    for variable, plantilla in ACCIONABLES.items():
+        valores = _candidatos(variable, entradas[variable], campos[variable])
+        if not valores:
+            continue
+        puntajes = modelo.barrido(entradas, variable, valores)
+        mejor = int(np.argmax(puntajes))
+        ganancia = float(puntajes[mejor]) - actual
+        if ganancia >= minimo_puntos:
+            texto = plantilla.format(a=formatear(variable, entradas[variable]), n=formatear(variable, valores[mejor]))
+            resultado.append((texto, ganancia, float(puntajes[mejor])))
+    return sorted(resultado, key=lambda r: -r[1])[:maximo]

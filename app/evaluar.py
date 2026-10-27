@@ -6,9 +6,11 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from estilo import (ACTUAL, NEUTRO, NUEVO, POBLACION, RESTA, SUMA, TINTA, aplicar_estilo, barra_lateral,
-                    encabezado, icono)
-from motor import banda, campos_del_modelo
+from estilo import (ACTUAL, NEUTRO, NUEVO, POBLACION, RESTA, SUMA, TINTA, TINTA_SUAVE, aplicar_estilo,
+                    barra_lateral, encabezado, icono, pasos)
+from formato import numero, porcentaje, puntos_porcentuales, usd
+from graficos import velocimetro
+from motor import banda, campos_del_modelo, mejoras
 
 aplicar_estilo()
 modelo, config = barra_lateral()
@@ -16,6 +18,9 @@ CAMPOS = campos_del_modelo(modelo)       # máximos en el tope que aprendió el 
 encabezado("¿Qué tan probable es que te presten?",
            "Ingresa tus datos y conoce tu puntaje de crédito, tu probabilidad de incumplimiento, "
            "cómo te ubicas frente a otros solicitantes y qué podrías mejorar.")
+pasos([("edit_note", "1. Ingresa tus datos", "Tu crédito, tus ingresos y tu historial."),
+       ("speed", "2. Conoce tu puntaje", "Tu riesgo y cómo te ubicas frente a otros."),
+       ("tune", "3. Simula mejoras", "Mira qué cambios suben tu puntaje.")])
 
 EMPLEO = {None: "Prefiero no decir", 0: "Menos de 1 año", **{k: f"{k} años" for k in range(1, 10)},
           10: "10 años o más"}
@@ -33,7 +38,7 @@ def rotulo(c, con_unidad=False):
     return f"{texto} · máx.: {c.tope} o más" if c.tope else texto
 
 
-def numero(var, col=st):
+def campo_numerico(var, col=st):
     c = CAMPOS[var]
     return col.number_input(rotulo(c, con_unidad=True), help=c.ayuda, key=var, **limites(c))
 
@@ -59,14 +64,14 @@ with izquierda:
     with st.container(border=True):
         st.markdown("#### :material/credit_card: El crédito")
         a, b = st.columns(2)
-        loan_amnt = numero("loan_amnt", a)
+        loan_amnt = campo_numerico("loan_amnt", a)
         purpose = lista("purpose", b)
         st.caption("Plazo: 36 meses. El modelo se construyó solo con créditos a 36 meses.")
 
     with st.container(border=True):
         st.markdown("#### :material/person: Sobre ti")
         a, b = st.columns(2)
-        annual_inc = numero("annual_inc", a)
+        annual_inc = campo_numerico("annual_inc", a)
         emp_length = a.selectbox(CAMPOS["emp_length"].etiqueta, list(EMPLEO), index=6,
                                  format_func=EMPLEO.get, help=CAMPOS["emp_length"].ayuda, key="emp_length")
         home_ownership = lista("home_ownership", b)
@@ -75,17 +80,17 @@ with izquierda:
     with st.container(border=True):
         st.markdown("#### :material/monitoring: Tu historial crediticio")
         a, b = st.columns(2)
-        revol_bal = numero("revol_bal", a)
+        revol_bal = campo_numerico("revol_bal", a)
         revol_util = deslizador("revol_util", a) if revol_bal > 0 else 0.0
         if revol_bal == 0:
             a.caption("Sin saldo rotativo, el uso de tu cupo es 0 %.")
-        open_acc = numero("open_acc", a)
-        total_acc = numero("total_acc", a)
+        open_acc = campo_numerico("open_acc", a)
+        total_acc = campo_numerico("total_acc", a)
         anios_credito = deslizador("antig_credito_meses", b)
         inq_last_6mths = deslizador("inq_last_6mths", b)
-        delinq_2yrs = (lista if CAMPOS["delinq_2yrs"].opciones else numero)("delinq_2yrs", b)
+        delinq_2yrs = (lista if CAMPOS["delinq_2yrs"].opciones else campo_numerico)("delinq_2yrs", b)
         tuvo_mora = b.toggle("He tenido alguna mora en mi historial", key="tuvo_mora")
-        mths_since_last_delinq = numero("mths_since_last_delinq", b) if tuvo_mora else None
+        mths_since_last_delinq = campo_numerico("mths_since_last_delinq", b) if tuvo_mora else None
         pub_rec = lista("pub_rec", b)
 
         if total_acc < open_acc:
@@ -110,14 +115,33 @@ _, nombre_banda, color_banda, simbolo = banda(pct)
 # Resultado
 # -----------------------------------------------------------------------------
 with derecha:
+    cortes, _, _ = modelo.cortes_bandas()
     st.markdown(f"""<div class="tarjeta">
         <div class="puntaje-etiqueta">Tu puntaje de crédito</div>
-        <div class="puntaje-valor">{puntaje:.0f}</div>
-        <span class="chip" style="background:{color_banda}1f; border:1px solid {color_banda}; color:{TINTA}"><span style="color:{color_banda}">{icono(simbolo)}</span> {nombre_banda}</span>
-        <div style="display:flex; gap:28px;">
-          <div class="dato"><b>{pd_est:.1%}</b>probabilidad de no pagar</div>
-          <div class="dato"><b>{pct:.0f} %</b>de los solicitantes tiene un puntaje igual o menor</div>
+        {velocimetro(puntaje, pct, cortes, TINTA, TINTA_SUAVE)}
+        <div style="text-align:center"><span class="chip" style="background:{color_banda}1f; border:1px solid {color_banda}; color:{TINTA}"><span style="color:{color_banda}">{icono(simbolo)}</span> {nombre_banda}</span></div>
+        <div style="display:flex; gap:28px; justify-content:center; text-align:center">
+          <div class="dato"><b>{porcentaje(pd_est)}</b>probabilidad de no pagar</div>
+          <div class="dato"><b>{numero(pct)} %</b>de los solicitantes tiene<br>un puntaje igual o menor</div>
         </div></div>""", unsafe_allow_html=True)
+
+    def formatear(variable, valor):
+        if variable in ("revol_bal", "loan_amnt"):
+            return usd(valor)
+        if variable in ("revol_util", "dti"):
+            return f"{numero(valor, 1 if variable == 'dti' else 0)} %"
+        return numero(valor)
+
+    sugerencias = mejoras(modelo, entradas, CAMPOS, formatear)
+    st.markdown("##### :material/trending_up: Lo que más te ayudaría")
+    if sugerencias:
+        st.markdown("".join(
+            f'<div class="mejora"><span class="mejora-texto">{texto}</span>'
+            f'<span class="mejora-puntos">{numero(ganancia, 1, signo=True)} pts</span></div>'
+            for texto, ganancia, _ in sugerencias), unsafe_allow_html=True)
+        st.caption("Calculado con el mismo modelo, cambiando una sola cosa a la vez. Es una estimación, no una garantía.")
+    else:
+        st.caption("Con tus datos actuales no encontramos cambios sencillos que suban tu puntaje de forma notable.")
 
     st.markdown("##### :material/groups: Cómo te ubicas frente a otros solicitantes")
     conteos, bordes = np.histogram(modelo.poblacion, bins=45)
@@ -127,13 +151,13 @@ with derecha:
         y=alt.Y("créditos:Q", title="Solicitantes"),
         tooltip=[alt.Tooltip("desde:Q", format=".0f", title="Desde"),
                  alt.Tooltip("hasta:Q", format=".0f", title="Hasta"), "créditos:Q"])
-    marca = pd.DataFrame({"puntaje": [puntaje], "texto": [f"Tú: {puntaje:.0f}"]})
+    marca = pd.DataFrame({"puntaje": [puntaje], "texto": [f"Tú: {numero(puntaje)}"]})
     regla = alt.Chart(marca).mark_rule(color=TINTA, strokeWidth=2.5).encode(x="puntaje:Q")
     texto = alt.Chart(marca).mark_text(align="left", dx=6, dy=-6, color=TINTA, fontWeight="bold").encode(
         x="puntaje:Q", y=alt.value(12), text="texto:N")
     st.altair_chart((barras + regla + texto).properties(height=210), width="stretch")
-    st.caption(f"{len(modelo.poblacion):,} créditos a 36 meses de Lending Club (2007–2012). "
-               "Más puntaje = menos riesgo.".replace(",", "."))
+    st.caption(f"{numero(len(modelo.poblacion))} créditos a 36 meses de Lending Club (2007–2012). "
+               "Más puntaje = menos riesgo.")
 
 # -----------------------------------------------------------------------------
 # Qué explica el puntaje
@@ -145,10 +169,10 @@ with explica:
     st.markdown("### :material/insights: ¿Qué explica tu puntaje?")
     base, puntos, interaccion = modelo.puntos(entradas)
     st.caption(f"Puntos que te suma o te resta cada característica frente a un solicitante promedio "
-               f"({base:.0f} puntos).")
+               f"({numero(base)} puntos).")
     top = puntos.head(8).rename("puntos").reset_index().rename(columns={"index": "variable"})
     top["efecto"] = np.where(top["puntos"] >= 0, "Te suma", "Te resta")
-    top["etiqueta"] = top["puntos"].map(lambda v: f"{v:+.1f}")
+    top["etiqueta"] = top["puntos"].map(lambda v: numero(v, 1, signo=True))
     orden = list(top["variable"])
     grafico = alt.Chart(top).encode(
         y=alt.Y("variable:N", sort=orden, title=None),
@@ -163,9 +187,9 @@ with explica:
     st.altair_chart((barras + etiquetas).properties(height=290), width="stretch")
     if modelo.es_logistica:
         st.caption(f"Con la regresión logística los puntos suman exactamente tu puntaje: "
-                   f"{base:.0f} + ({puntos.sum():+.1f}) = {puntaje:.0f}.")
+                   f"{numero(base)} + ({numero(puntos.sum(), 1, signo=True)}) = {numero(puntaje)}.")
     else:
-        st.caption(f"En la red neuronal los puntos no suman exactamente: {interaccion:+.1f} puntos vienen de "
+        st.caption(f"En la red neuronal los puntos no suman exactamente: {numero(interaccion, 1, signo=True)} puntos vienen de "
                    "combinaciones entre variables que no se pueden atribuir a una sola.")
 
 # -----------------------------------------------------------------------------
@@ -216,9 +240,9 @@ with simula:
 
     simulado = modelo.evaluar({**entradas, var: a_modelo(nuevo)}).iloc[0]
     m1, m2 = st.columns(2)
-    m1.metric("Nuevo puntaje", f"{simulado['puntaje']:.0f}", f"{simulado['puntaje'] - puntaje:+.1f} puntos")
-    m2.metric("Nueva probabilidad de no pagar", f"{simulado['pd']:.1%}",
-              f"{(simulado['pd'] - pd_est) * 100:+.1f} p.p.", delta_color="inverse")
+    m1.metric("Nuevo puntaje", numero(simulado["puntaje"]), f"{numero(simulado['puntaje'] - puntaje, 1, signo=True)} puntos")
+    m2.metric("Nueva probabilidad de no pagar", porcentaje(simulado["pd"]),
+              puntos_porcentuales(simulado["pd"] - pd_est), delta_color="inverse")
     st.altair_chart(grafico.properties(height=250), width="stretch")
 
 st.divider()

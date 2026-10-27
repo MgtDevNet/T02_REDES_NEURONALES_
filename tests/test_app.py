@@ -4,7 +4,9 @@ import numpy as np
 import pytest
 from streamlit.testing.v1 import AppTest
 
-from app.motor import CAMPOS, RAIZ, Modelo, banda, campos_del_modelo, leer_config_app, solicitante_por_defecto
+from app.formato import numero, porcentaje, puntos_porcentuales, usd
+from app.motor import (CAMPOS, RAIZ, Modelo, banda, campos_del_modelo, leer_config_app, mejoras,
+                       solicitante_por_defecto)
 
 
 @pytest.fixture(scope="module")
@@ -55,10 +57,10 @@ def test_simulador_y_cambio_de_modelo():
     at = AppTest.from_file(str(RAIZ / "app/evaluar.py"), default_timeout=60).run()
     at.selectbox(key="var_simulada").set_value("purpose").run()
     at.selectbox(key="nuevo_purpose").set_value("small_business").run()
-    assert float(at.metric[0].delta.split()[0]) < 0          # pequeño negocio resta puntos
+    assert float(at.metric[0].delta.split()[0].replace(",", ".")) < 0          # pequeño negocio resta puntos
     at.radio(key="modelo_elegido").set_value("Red neuronal (comparación)").run()
     assert not at.exception
-    assert np.isfinite(float(at.metric[0].value))
+    assert np.isfinite(float(at.metric[0].value.replace(".", "").replace(",", ".")))
 
 
 def test_controles_llegan_justo_al_tope_del_modelo(logistica):
@@ -79,4 +81,33 @@ def test_simular_moras_con_lista():
     at.selectbox(key="var_simulada").set_value("delinq_2yrs").run()
     at.selectbox(key="nuevo_delinq_2yrs").set_value(2).run()
     assert not at.exception
-    assert float(at.metric[0].delta.split()[0]) < 0
+    assert float(at.metric[0].delta.split()[0].replace(",", ".")) < 0
+
+
+def test_formato_colombiano():
+    assert numero(10000) == "10.000" and numero(1234.56, 1) == "1.234,6"
+    assert numero(-22.44, 1, signo=True) == "-22,4" and numero(3, 1, signo=True) == "+3,0"
+    assert porcentaje(0.102) == "10,2 %" and puntos_porcentuales(0.011) == "+1,1 p. p."
+    assert usd(240000) == "USD 240.000"
+
+
+def test_mejoras_suben_el_puntaje_y_son_realistas(logistica):
+    campos = campos_del_modelo(logistica)
+    s = {**solicitante_por_defecto(), "inq_last_6mths": 3, "revol_util": 85}
+    sugerencias = mejoras(logistica, s, campos, lambda v, x: str(x))
+    actual = logistica.evaluar(s)["puntaje"].iloc[0]
+    assert sugerencias and all(g >= 1 for _, g, _ in sugerencias)
+    assert [g for _, g, _ in sugerencias] == sorted((g for _, g, _ in sugerencias), reverse=True)
+    for _, g, nuevo in sugerencias:
+        assert nuevo == pytest.approx(actual + g)
+    assert any("de 85 a 30" in texto for texto, _, _ in sugerencias)   # meta realista, no 10 %
+
+
+def test_velocimetro_y_cortes(logistica):
+    import sys
+    sys.path.insert(0, str(RAIZ / "app"))
+    from graficos import velocimetro
+    cortes, minimo, maximo = logistica.cortes_bandas()
+    assert minimo < cortes["Por mejorar"] < cortes["Promedio"] < cortes["Bueno"] < cortes["Excelente"] < maximo
+    svg = velocimetro(550, 59, cortes, "#000", "#555")
+    assert svg.startswith("<svg") and svg.count("<path") == 5 and ">550<" in svg

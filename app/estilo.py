@@ -124,6 +124,20 @@ section[data-testid="stSidebar"] {{
 .dato {{ color: {TINTA_SUAVE}; font-size: .85rem; margin-top: 16px; }}
 .dato b {{ color: {TINTA}; font-size: 1.4rem; font-weight: 700; display: block; }}
 .aviso {{ color: {TINTA_SUAVE}; font-size: .8rem; }}
+/* Franja de pasos bajo el encabezado */
+.pasos {{ display: flex; gap: 14px; margin: -4px 0 22px 0; flex-wrap: wrap; }}
+.paso {{ flex: 1 1 220px; display: flex; gap: 12px; align-items: center; background: #ffffffcc;
+         border: 1px solid #e7e1f0; border-radius: 14px; padding: 12px 16px; }}
+.paso .icono {{ color: {PRIMARIO}; font-size: 1.7rem; background: #f1e8fc; border-radius: 10px; padding: 6px; }}
+.paso b {{ color: {TINTA}; display: block; font-size: .95rem; }}
+.paso span.txt {{ color: {TINTA_SUAVE}; font-size: .82rem; }}
+/* Sugerencias de mejora */
+.mejora {{ display: flex; justify-content: space-between; align-items: center; gap: 12px;
+           background: #fff; border: 1px solid #e7e1f0; border-left: 4px solid {PRIMARIO};
+           border-radius: 12px; padding: 10px 14px; margin-bottom: 8px; }}
+.mejora-texto {{ color: {TINTA}; font-size: .92rem; }}
+.mejora-puntos {{ color: #067a06; font-weight: 700; white-space: nowrap; background: #e7f6e7;
+                  border-radius: 999px; padding: 3px 10px; font-size: .9rem; }}
 div[data-testid="stVerticalBlockBorderWrapper"] {{ background: #fff; border-radius: 18px; }}
 </style>
 """
@@ -141,6 +155,13 @@ def icono(nombre):
 def encabezado(titulo, subtitulo):
     st.markdown(f"""<div class="banda-superior"><div class="marca">¿Me prestas? · Simulador de crédito</div>
         <h1>{titulo}</h1><p>{subtitulo}</p></div>""", unsafe_allow_html=True)
+
+
+def pasos(lista):
+    """Franja de pasos: [(ícono Material, título, texto), ...]."""
+    st.markdown('<div class="pasos">' + "".join(
+        f'<div class="paso">{icono(simbolo)}<div><b>{titulo}</b><span class="txt">{texto}</span></div></div>'
+        for simbolo, titulo, texto in lista) + "</div>", unsafe_allow_html=True)
 
 
 @st.cache_resource
