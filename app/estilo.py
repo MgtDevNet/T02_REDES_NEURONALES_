@@ -73,8 +73,10 @@ h1, h2, h3, h4, h5, h6, .puntaje-valor,
 [data-testid="stHeadingWithActionElements"], [data-testid="stHeadingWithActionElements"] * {{
     font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif !important;
 }}
-/* los íconos dentro de los títulos conservan su fuente de símbolos */
+/* los íconos dentro de los títulos conservan su fuente de símbolos; en markdown, Streamlit
+   dibuja :material/...: como <span role="img" translate="no"> con la fuente en línea */
 [data-testid="stIconMaterial"], [data-testid="stHeadingWithActionElements"] [data-testid="stIconMaterial"],
+[data-testid="stHeadingWithActionElements"] span[role="img"], span[role="img"][translate="no"],
 .icono {{ font-family: 'Material Symbols Rounded' !important; }}
 h1, h2, h3, h4 {{ color: {TINTA}; font-weight: 700; letter-spacing: -0.3px; }}
 /* Fondo de la página: lila claro con dos brillos morados muy tenues en las esquinas */
