@@ -1,10 +1,10 @@
 """
 Entrena el modelo de probabilidad de incumplimiento con un solo comando.
 
-    python entrenar_pd.py                                     # usa config.ini
-    python entrenar_pd.py --demo                              # muestra de los datos (< 2 min)
-    python entrenar_pd.py --set red.capas_ocultas=64,32 --set red.dropout=0.3
-    python entrenar_pd.py --set red.capas_ocultas= --set salida.carpeta=models/pd_logistica
+    python -m scripts.parte1_pd.entrenar_pd                                     # usa config.ini
+    python -m scripts.parte1_pd.entrenar_pd --demo                              # muestra de los datos (< 2 min)
+    python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas=64,32 --set red.dropout=0.3
+    python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas= --set salida.carpeta=models/pd_logistica
 
 Los hiperparámetros se cambian en config.ini (secciones [pd.xxx]) o con --set.
 

@@ -7,7 +7,7 @@ import pytest
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, root_mean_squared_error
 
-from entrenar_lgd import main
+from scripts.parte2_lgd.entrenar_lgd import main
 from src import metricas
 from src.red_neuronal import RedNeuronal
 from tests.test_entrenar_pd import datos_sinteticos

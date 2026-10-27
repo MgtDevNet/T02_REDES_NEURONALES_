@@ -98,7 +98,7 @@ class PreprocesadorCredito:
         return s.where(s.isin(conocidas), destino)
 
     def fit(self, X, y=None):
-        # columnas de entrada, con el mismo nombre que usa scikit-learn (estimar_perdida.py lo lee)
+        # columnas de entrada, con el mismo nombre que usa scikit-learn (scripts/parte2_lgd/estimar_perdida.py lo lee)
         self.feature_names_in_ = np.array(self.numericas + self.indicadoras + self.categoricas, dtype=object)
         self.medianas_ = X[self.numericas].astype(float).median()
         self.topes_ = X[self.con_tope].astype(float).quantile(self.percentil_tope)

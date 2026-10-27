@@ -44,44 +44,45 @@ a ejecutar; no hay que tocar el código.
 ### Parte 1, de punta a punta
 
 ```bash
-python preparar_datos_pd.py          # loan.csv -> data/processed/pd_limpio.parquet (ya incluido en el repo)
-python entrenar_pd.py                # MLP final -> models/pd
-python entrenar_pd.py --set red.capas_ocultas= --set red.dropout=0 \
-                      --set salida.carpeta=models/pd_logistica      # logística en NumPy (la usa la app)
-python evaluar_pd.py                 # prueba: MLP frente a la logística de Primer_Punto.ipynb (sin reentrenar)
-python interpretar_pd.py             # importancia por permutación y dependencia parcial
-python scorecard_pd.py               # puntos por variable (logística); --modelo models/pd para la red
-python buscar_hiperparametros_pd.py  # búsqueda aleatoria (~10 min) -> reports/busqueda_pd.csv
-python repetir_semillas_pd.py        # 30 semillas de la configuración final -> reports/
+# los scripts se ejecutan desde la raíz del repositorio, como módulos (python -m)
+python -m scripts.parte1_pd.preparar_datos_pd          # loan.csv -> data/processed/pd_limpio.parquet (ya incluido en el repo)
+python -m scripts.parte1_pd.entrenar_pd                # MLP final -> models/pd
+python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas= --set red.dropout=0 \
+                                --set salida.carpeta=models/pd_logistica   # logística en NumPy (la usa la app)
+python -m scripts.parte1_pd.evaluar_pd                 # prueba: MLP frente a la logística de Primer_Punto.ipynb (sin reentrenar)
+python -m scripts.parte1_pd.interpretar_pd             # importancia por permutación y dependencia parcial
+python -m scripts.parte1_pd.scorecard_pd               # puntos por variable (logística); --modelo models/pd para la red
+python -m scripts.parte1_pd.buscar_hiperparametros_pd  # búsqueda aleatoria (~10 min) -> reports/busqueda_pd.csv
+python -m scripts.parte1_pd.repetir_semillas_pd        # 30 semillas de la configuración final -> reports/
 ```
 
 Datos de la Parte 1: solo créditos a 36 meses, con partición temporal por fecha de
 originación (train jun-2007 a dic-2011, valid ene-jun 2012, test jul-dic 2012). La
-justificación está en el docstring de `preparar_datos_pd.py` y en el reporte.
+justificación está en el docstring de `scripts/parte1_pd/preparar_datos_pd.py` y en el reporte.
 
 ### Comandos generales
 
 ```bash
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 
-python entrenar_pd.py            # Parte 1: probabilidad de incumplimiento + scorecard
-python entrenar_pd.py --demo     # versión rápida con una muestra (< 2 minutos)
-python entrenar_lgd.py           # Parte 2: pérdida dado incumplimiento
-python entrenar_lgd.py --demo
+python -m scripts.parte1_pd.entrenar_pd          # Parte 1: probabilidad de incumplimiento + scorecard
+python -m scripts.parte1_pd.entrenar_pd --demo   # versión rápida con una muestra (< 2 minutos)
+python -m scripts.parte2_lgd.entrenar_lgd        # Parte 2: pérdida dado incumplimiento
+python -m scripts.parte2_lgd.entrenar_lgd --demo
 ```
 
 Para cambiar un valor solo en una ejecución, sin editar `config.ini`, se usa `--set`
 con la forma `seccion.clave=valor` (la sección sin el prefijo `pd.` / `lgd.`):
 
 ```bash
-python entrenar_pd.py --set red.capas_ocultas=64,32 --set red.dropout=0.3
-python entrenar_pd.py --set entrenamiento.tasa=0.01 --set semilla=7
-python entrenar_pd.py --set scorecard.pdo=40
-python entrenar_pd.py --set red.capas_ocultas= --set red.dropout=0 \
-                      --set salida.carpeta=models/pd_logistica      # regresión logística
-python entrenar_lgd.py --set red.perdida=entropia_cruzada           # respuesta fraccional
-python entrenar_lgd.py --set red.capas_ocultas= --set red.salida=identidad \
-                       --set red.dropout=0 --set salida.carpeta=models/lgd_lineal   # regresión lineal
+python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas=64,32 --set red.dropout=0.3
+python -m scripts.parte1_pd.entrenar_pd --set entrenamiento.tasa=0.01 --set semilla=7
+python -m scripts.parte1_pd.entrenar_pd --set scorecard.pdo=40
+python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas= --set red.dropout=0 \
+                                --set salida.carpeta=models/pd_logistica   # regresión logística
+python -m scripts.parte2_lgd.entrenar_lgd --set red.perdida=entropia_cruzada  # respuesta fraccional
+python -m scripts.parte2_lgd.entrenar_lgd --set red.capas_ocultas= --set red.salida=identidad \
+                                 --set red.dropout=0 --set salida.carpeta=models/lgd_lineal   # regresión lineal
 ```
 
 La red neuronal está implementada desde cero con NumPy en `src/red_neuronal.py`.
@@ -107,16 +108,19 @@ python -m pytest -q
 ## Estructura
 
 ```
-config.ini         hiperparámetros de todos los experimentos
-entrenar_pd.py     entrenamiento de la Parte 1 (un solo comando)
-entrenar_lgd.py    entrenamiento de la Parte 2 (un solo comando)
-datos/             datos originales de Kaggle (no se suben al repo)
-data/processed/    datos procesados que usan los modelos
-src/               código: limpieza, red neuronal, scorecard, métricas
-models/            modelos entrenados (la app los carga sin reentrenar)
-app/               aplicación web (Streamlit): app.py, evaluar.py, como_funciona.py, motor.py
-reports/           resultados de la Parte 1 (búsqueda, semillas, evaluación, scorecard)
-reports/figures/   figuras regenerables con evaluar_pd.py e interpretar_pd.py
+config.ini           hiperparámetros de todos los experimentos
+scripts/parte1_pd/   Parte 1 (PD): preparar datos, entrenar, buscar hiperparámetros, semillas,
+                     evaluar, interpretar y scorecard
+scripts/parte2_lgd/  Parte 2 (LGD): preparar, entrenar, evaluar y estimar la pérdida esperada
+Punto_1/  Punto_2/   notebooks del equipo (análisis descriptivo y modelos de referencia)
+datos/               datos originales de Kaggle (no se suben al repo)
+data/processed/      datos procesados que usan los modelos
+src/                 código compartido: limpieza, red neuronal, scorecard, métricas
+models/              modelos entrenados (la app los carga sin reentrenar)
+app/                 aplicación web (Streamlit): app.py, evaluar.py, como_funciona.py, motor.py
+reports/             resultados de la Parte 1 (búsqueda, semillas, evaluación, scorecard)
+reports/figures/     figuras regenerables con evaluar_pd e interpretar_pd
+tests/               pruebas (python -m pytest -q)
 ```
 
 ## Red neuronal del punto 2

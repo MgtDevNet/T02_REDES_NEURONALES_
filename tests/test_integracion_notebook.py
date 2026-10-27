@@ -4,7 +4,7 @@ from tests.test_preparar_lgd import muestra
 from src.integracion_pd_lgd import preparar_pd_y_cohorte
 from src.discusion_lgd import redactar
 from src.experimentos_lgd import ejecutar
-from preparar_lgd import preparar
+from scripts.parte2_lgd.preparar_lgd import preparar
 
 
 def muestra_temporal():

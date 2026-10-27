@@ -18,7 +18,7 @@ def test_inferencia_usa_ambos_modelos_y_mismas_filas(tmp_path):
     import pandas as pd
     from src.preprocesamiento import construir_preprocesador
     from src.red_neuronal import RedNeuronal
-    from estimar_perdida import estimar
+    from scripts.parte2_lgd.estimar_perdida import estimar
     datos = pd.DataFrame({'id':['a','b','c','d'], 'funded_amnt':[100,200,300,400], 'x':[1.,2.,3.,4.]})
     for tarea, perdida in [('pd','entropia_cruzada'),('lgd','ecm')]:
         carpeta = tmp_path / tarea

@@ -13,7 +13,7 @@ from src.metricas import mae, resumen_regresion, comparar_distribuciones
 from src.preprocesamiento import construir_preprocesador
 from src.red_neuronal import RedNeuronal
 from src.configuracion import cargar_config
-from entrenar_lgd import guardar
+from scripts.parte2_lgd.entrenar_lgd import guardar
 
 
 def ejecutar(ruta='data/processed/lgd_limpio.parquet', salida='reports/experimentos_lgd',

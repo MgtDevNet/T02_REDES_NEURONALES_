@@ -1,8 +1,8 @@
 """
 Qué variables hacen más riesgosa a una persona (tarea 7 de la Parte 1).
 
-    python interpretar_pd.py                       # modelo de models/pd
-    python interpretar_pd.py --modelo models/pd_logistica --repeticiones 5
+    python -m scripts.parte1_pd.interpretar_pd                       # modelo de models/pd
+    python -m scripts.parte1_pd.interpretar_pd --modelo models/pd_logistica --repeticiones 5
 
 Dos métodos que funcionan con cualquier modelo (también con la red), sobre el conjunto de prueba:
 
@@ -32,7 +32,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from evaluar_pd import COLORES, FIGURAS, TINTA_SUAVE, cargar_modelo, estilo, predecir
+from scripts.parte1_pd.evaluar_pd import COLORES, FIGURAS, TINTA_SUAVE, cargar_modelo, estilo, predecir
 from src import metricas
 from src.preprocesamiento import INDICADOR_DE
 from src.variables import NOMBRES

@@ -1,7 +1,7 @@
 import json
 import numpy as np
 import pytest
-from preparar_lgd import preparar
+from scripts.parte2_lgd.preparar_lgd import preparar
 from tests.test_preparar_lgd import muestra
 from src.experimentos_lgd import ejecutar
 

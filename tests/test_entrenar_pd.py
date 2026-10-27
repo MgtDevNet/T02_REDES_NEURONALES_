@@ -7,7 +7,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from entrenar_pd import main
+from scripts.parte1_pd.entrenar_pd import main
 from src.red_neuronal import RedNeuronal
 
 
@@ -32,7 +32,7 @@ def datos_sinteticos(n=3000, semilla=0):
         "home_ownership": rng.choice(["RENT", "OWN", "MORTGAGE", "OTHER"], n, p=[0.5, 0.1, 0.395, 0.005]),
         "purpose": rng.choice(["debt_consolidation", "credit_card", "other"], n),
     })
-    # columnas como las deja preparar_datos_pd.py (las de arriba se mantienen para la LGD)
+    # columnas como las deja scripts/parte1_pd/preparar_datos_pd.py (las de arriba se mantienen para la LGD)
     df["antig_credito_meses"] = df["antiguedad_credito_meses"].round()
     df["nunca_mora"] = df["mths_since_last_delinq"].isna().astype(int)
     df["emp_length_na"] = 0

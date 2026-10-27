@@ -28,13 +28,13 @@ Estas cifras son **preliminares de demo**, no resultados finales ni promedios de
 Para generar el reporte, tabla y Figura 1 desde los archivos de la corrida en su PC:
 
 ```powershell
-.\.venv\Scripts\python.exe evaluar_lgd.py --modelo models/lgd_demo --salida reports/lgd_demo
+.\.venv\Scripts\python.exe -m scripts.parte2_lgd.evaluar_lgd --modelo models/lgd_demo --salida reports/lgd_demo
 ```
 
 Para la corrida completa, después de entrenar sin `--demo`:
 
 ```powershell
-.\.venv\Scripts\python.exe evaluar_lgd.py --modelo models/lgd --salida reports/lgd
+.\.venv\Scripts\python.exe -m scripts.parte2_lgd.evaluar_lgd --modelo models/lgd --salida reports/lgd
 ```
 
 El comando genera `evaluacion_lgd.md`, `metricas_lgd.json`, `distribucion_lgd.csv` y `figura_1_distribucion_lgd.png` sin reentrenar. La figura utiliza las mismas observaciones de prueba para ambos histogramas y sus distribuciones acumuladas.
@@ -63,12 +63,12 @@ Ejemplo exclusivamente ilustrativo: PD = 0,10; LGD_proxy = 0,80; monto = 10.000 
 
 ## 4. Calcular por crédito sin reentrenar
 
-`estimar_perdida.py` carga **los dos modelos de Manuel** junto con sus respectivos preprocesadores y calcula PD, LGD y pérdida para cada fila del mismo archivo. No mezcla filas de archivos de predicciones distintos ni usa la LGD observada como si fuera una predicción.
+`scripts/parte2_lgd/estimar_perdida.py` carga **los dos modelos de Manuel** junto con sus respectivos preprocesadores y calcula PD, LGD y pérdida para cada fila del mismo archivo. No mezcla filas de archivos de predicciones distintos ni usa la LGD observada como si fuera una predicción.
 
 Necesita `models/pd/red.npz`, `models/pd/preprocesador.joblib` y los equivalentes de `models/lgd/`. El archivo de entrada debe contener `id` único, `funded_amnt` y las predictoras tipadas como al entrenar (plazo/empleo numéricos y antigüedad calculada). **No sirve directamente el loan.csv crudo ni el parquet de LGD actual**, que omite identificador y exposición y contiene solo la submuestra de incumplidos. No hace falta conocer la LGD observada de los clientes nuevos. Cargue únicamente artefactos joblib propios o de procedencia conocida.
 
 ```powershell
-.\.venv\Scripts\python.exe estimar_perdida.py --creditos datos/creditos_para_predecir.parquet --modelo-pd models/pd --modelo-lgd models/lgd
+.\.venv\Scripts\python.exe -m scripts.parte2_lgd.estimar_perdida --creditos datos/creditos_para_predecir.parquet --modelo-pd models/pd --modelo-lgd models/lgd
 ```
 
 Los datos de entrada y el modelo de PD todavía deben estar disponibles para ejecutar este paso con créditos reales. El programa produce `reports/perdida_esperada.csv` con una fila por crédito: `id`, `pd`, `lgd_proxy`, `ead_proxy`, `perdida_esperada_proxy`. La suma es la pérdida esperada proxy de la cartera, no una medida de pérdida inesperada ni capital económico. Para evaluar desempeño fuera de muestra, use créditos no utilizados para ajustar o seleccionar ninguno de los dos modelos.

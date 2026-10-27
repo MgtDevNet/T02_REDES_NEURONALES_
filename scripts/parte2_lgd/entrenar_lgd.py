@@ -1,10 +1,10 @@
 """
 Entrena el modelo de pérdida dado incumplimiento (LGD) con un solo comando.
 
-    python entrenar_lgd.py                                    # usa config.ini
-    python entrenar_lgd.py --demo                             # muestra de los datos (< 2 min)
-    python entrenar_lgd.py --set red.perdida=entropia_cruzada  # respuesta fraccional
-    python entrenar_lgd.py --set red.capas_ocultas= --set red.salida=identidad \
+    python -m scripts.parte2_lgd.entrenar_lgd                                    # usa config.ini
+    python -m scripts.parte2_lgd.entrenar_lgd --demo                             # muestra de los datos (< 2 min)
+    python -m scripts.parte2_lgd.entrenar_lgd --set red.perdida=entropia_cruzada  # respuesta fraccional
+    python -m scripts.parte2_lgd.entrenar_lgd --set red.capas_ocultas= --set red.salida=identidad \
                            --set red.dropout=0 --set salida.carpeta=models/lgd_lineal
 
 Los hiperparámetros se cambian en config.ini (secciones [lgd.xxx]) o con --set.
@@ -26,7 +26,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from entrenar_pd import PARTICIONES, cargar_datos
+from scripts.parte1_pd.entrenar_pd import PARTICIONES, cargar_datos
 from src import metricas
 from src.configuracion import cargar_config, imprimir_config
 from src.preprocesamiento import construir_preprocesador

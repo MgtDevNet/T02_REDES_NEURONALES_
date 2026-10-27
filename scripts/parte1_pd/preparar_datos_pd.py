@@ -1,8 +1,8 @@
 """
 Genera los datos de la Parte 1 (probabilidad de incumplimiento) a partir del archivo original.
 
-    python preparar_datos_pd.py                          # lee datos/archive.zip o datos/loan/loan.csv
-    python preparar_datos_pd.py --origen ruta/loan.csv
+    python -m scripts.parte1_pd.preparar_datos_pd                          # lee datos/archive.zip o datos/loan/loan.csv
+    python -m scripts.parte1_pd.preparar_datos_pd --origen ruta/loan.csv
 
 Resultado: data/processed/pd_limpio.parquet, con una fila por crédito y las columnas
     y            1 = malo, 0 = bueno (codificación del enunciado a partir de loan_status)

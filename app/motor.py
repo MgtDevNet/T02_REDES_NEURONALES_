@@ -1,7 +1,7 @@
 """
 Lógica de la aplicación web, separada de la interfaz para poder probarla con pytest.
 
-Carga un modelo guardado por entrenar_pd.py (no reentrena) y, para un solicitante:
+Carga un modelo guardado por scripts/parte1_pd/entrenar_pd.py (no reentrena) y, para un solicitante:
     - arma su fila de entrada con las mismas columnas del entrenamiento,
     - calcula PD, puntaje y percentil frente a la población,
     - reparte el puntaje en puntos por variable (src/scorecard.py),

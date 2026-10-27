@@ -1,10 +1,10 @@
-"""Pruebas de la limpieza (preparar_datos_pd.py) y del preprocesamiento de la Parte 1."""
+"""Pruebas de la limpieza (scripts/parte1_pd/preparar_datos_pd.py) y del preprocesamiento de la Parte 1."""
 
 import numpy as np
 import pandas as pd
 import pytest
 
-from preparar_datos_pd import preparar
+from scripts.parte1_pd.preparar_datos_pd import preparar
 from src.preprocesamiento import PreprocesadorCredito
 
 

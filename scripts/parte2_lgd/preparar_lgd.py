@@ -1,6 +1,6 @@
 """Construye el parquet que consume la red de Manuel para el punto 2.
 
-Ejemplo: python preparar_lgd.py --csv datos/loan/loan.csv
+Ejemplo: python -m scripts.parte2_lgd.preparar_lgd --csv datos/loan/loan.csv
 No descarga datos ni cambia la implementación de la red neuronal.
 """
 import argparse

@@ -1,8 +1,8 @@
 """
 Scorecard de la Parte 1: de la probabilidad de incumplimiento a puntos por variable.
 
-    python scorecard_pd.py                          # regresión logística (models/pd_logistica)
-    python scorecard_pd.py --modelo models/pd       # la red neuronal
+    python -m scripts.parte1_pd.scorecard_pd                          # regresión logística (models/pd_logistica)
+    python -m scripts.parte1_pd.scorecard_pd --modelo models/pd       # la red neuronal
 
 Parámetros (config.ini, sección [pd.scorecard]): puntaje base, odds de referencia y PDO.
     factor = PDO / ln(2)
@@ -23,7 +23,7 @@ import argparse
 import numpy as np
 import pandas as pd
 
-from evaluar_pd import cargar_modelo
+from scripts.parte1_pd.evaluar_pd import cargar_modelo
 from src.preprocesamiento import INDICADOR_DE
 from src.scorecard import Scorecard, puntos_por_variable
 from src.variables import NOMBRES

@@ -1,10 +1,10 @@
 """
 Entrena una configuración con varias semillas y resume la variabilidad de sus métricas.
 
-    python repetir_semillas_pd.py                                   # config.ini (MLP), 30 semillas
-    python repetir_semillas_pd.py --nombre logistica \
+    python -m scripts.parte1_pd.repetir_semillas_pd                                   # config.ini (MLP), 30 semillas
+    python -m scripts.parte1_pd.repetir_semillas_pd --nombre logistica \
         --set red.capas_ocultas= --set red.dropout=0 --set red.l2=0  # la regresión logística
-    python repetir_semillas_pd.py --semillas 5 --demo               # versión rápida
+    python -m scripts.parte1_pd.repetir_semillas_pd --semillas 5 --demo               # versión rápida
 
 El enunciado pide al menos 30 corridas independientes de la configuración final de cada
 modelo, reportando media, desviación estándar, mejor y peor valor de cada métrica. La semilla
@@ -21,7 +21,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from entrenar_pd import PARTICIONES, entrenar
+from scripts.parte1_pd.entrenar_pd import PARTICIONES, entrenar
 from src.configuracion import cargar_config
 
 METRICAS = ["auc", "gini", "ks", "brier"]

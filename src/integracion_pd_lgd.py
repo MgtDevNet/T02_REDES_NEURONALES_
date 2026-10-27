@@ -2,12 +2,12 @@
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from preparar_datos_pd import preparar as preparar_pd
+from scripts.parte1_pd.preparar_datos_pd import preparar as preparar_pd
 from src.configuracion import cargar_config
 
 
 def preparar_pd_y_cohorte(bruto, salida):
-    """Misma población y partición que el modelo PD del punto 1 (preparar_datos_pd.py):
+    """Misma población y partición que el modelo PD del punto 1 (scripts/parte1_pd/preparar_datos_pd.py):
     solo créditos a 36 meses; train jun-2007 a dic-2011, valid ene-jun 2012,
     test jul-dic 2012. Así la cohorte entra directo a models/pd.
 

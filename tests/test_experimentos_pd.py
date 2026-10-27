@@ -3,9 +3,9 @@
 import numpy as np
 import pandas as pd
 
-from buscar_hiperparametros_pd import aplicar, como_set, muestrear_mlp
-from evaluar_pd import curva_roc
-from repetir_semillas_pd import resumir
+from scripts.parte1_pd.buscar_hiperparametros_pd import aplicar, como_set, muestrear_mlp
+from scripts.parte1_pd.evaluar_pd import curva_roc
+from scripts.parte1_pd.repetir_semillas_pd import resumir
 from src import metricas
 from src.configuracion import cargar_config
 

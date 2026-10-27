@@ -1,8 +1,8 @@
 """
 Evalúa en prueba los modelos guardados de la Parte 1 y genera las figuras del reporte.
 
-    python evaluar_pd.py                         # referencia del notebook, models/pd_logistica y models/pd
-    python evaluar_pd.py --modelos models/pd     # referencia del notebook frente a un solo modelo
+    python -m scripts.parte1_pd.evaluar_pd                         # referencia del notebook, models/pd_logistica y models/pd
+    python -m scripts.parte1_pd.evaluar_pd --modelos models/pd     # referencia del notebook frente a un solo modelo
 
 El modelo de referencia es la regresión logística de Punto_1/Primer_Punto.ipynb (sklearn, L2 con
 C elegido por pérdida logarítmica en validación). Se usan las predicciones en prueba que guardó

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
-from preparar_lgd import COLUMNAS, preparar
+from scripts.parte2_lgd.preparar_lgd import COLUMNAS, preparar
 
 
 def muestra():

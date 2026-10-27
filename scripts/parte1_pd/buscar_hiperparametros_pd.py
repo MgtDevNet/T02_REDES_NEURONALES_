@@ -1,8 +1,8 @@
 """
 Búsqueda aleatoria de hiperparámetros para la Parte 1 (PD).
 
-    python buscar_hiperparametros_pd.py                     # 40 configuraciones de MLP + logística
-    python buscar_hiperparametros_pd.py --n 10 --demo       # versión rápida
+    python -m scripts.parte1_pd.buscar_hiperparametros_pd                     # 40 configuraciones de MLP + logística
+    python -m scripts.parte1_pd.buscar_hiperparametros_pd --n 10 --demo       # versión rápida
 
 Por qué búsqueda aleatoria: con varios hiperparámetros, solo unos pocos importan de verdad, y
 el muestreo aleatorio prueba más valores distintos de cada uno que una grilla con el mismo
@@ -10,7 +10,7 @@ número de entrenamientos (Bergstra y Bengio, 2012).
 
 Cada configuración se elige SOLO con el conjunto de validación (AUC; el desempate es la
 entropía cruzada). Este script no guarda métricas de prueba: la prueba se usa una sola vez,
-con la configuración final, en repetir_semillas_pd.py.
+con la configuración final, en scripts/parte1_pd/repetir_semillas_pd.py.
 
 Para la comparación justa del enunciado, la regresión logística también se ajusta: se prueba
 su penalización L2 en una grilla corta. Ambas familias usan los mismos datos, preprocesamiento
@@ -28,7 +28,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from entrenar_pd import entrenar
+from scripts.parte1_pd.entrenar_pd import entrenar
 from src.configuracion import cargar_config
 
 # Espacio de búsqueda del MLP

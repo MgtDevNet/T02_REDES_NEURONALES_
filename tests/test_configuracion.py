@@ -5,7 +5,7 @@ import shutil
 
 import pytest
 
-from entrenar_pd import main
+from scripts.parte1_pd.entrenar_pd import main
 from src.configuracion import cargar_config
 from tests.test_entrenar_pd import datos_sinteticos
 
