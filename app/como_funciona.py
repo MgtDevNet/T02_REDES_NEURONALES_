@@ -59,24 +59,40 @@ promedio. Eso es lo que muestra el gráfico «¿Qué explica tu puntaje?».
 """)
 
 st.markdown("### 4. ¿Por qué regresión logística y no la red neuronal?")
-filas = []
-for nombre, archivo, carpeta in (("Regresión logística", "semillas_pd_logistica.csv", config["modelo"]),
-                                 ("Red neuronal", "semillas_pd_mlp.csv", config["modelo_comparacion"])):
-    ruta = RAIZ / "reports" / archivo
-    if ruta.exists():
-        r = pd.read_csv(ruta)
-        filas.append({"Modelo": nombre,
-                      "AUC en prueba (media ± desv.)": f"{numero(r['auc_test'].mean(), 3)} ± {numero(r['auc_test'].std(), 3)}",
-                      "Brier": numero(r['brier_test'].mean(), 4),
-                      "Parámetros": numero(cargar_modelo(carpeta).metadata["parametros_entrenables"])})
+# La logística es la de referencia del informe (Punto_1/Primer_Punto.ipynb), evaluada por
+# scripts/parte1_pd/evaluar_pd.py; la red, con sus 30 semillas de repetir_semillas_pd.py.
+filas, auc_replica = [], None
+ruta = RAIZ / "reports/evaluacion_pd.csv"
+if ruta.exists():
+    evaluacion = pd.read_csv(ruta).query("grupo == 'total'").set_index("modelo")
+    if "Regresión logística (referencia)" in evaluacion.index:
+        ref = evaluacion.loc["Regresión logística (referencia)"]
+        filas.append({"Modelo": "Regresión logística",
+                      "AUC en prueba": f"{numero(ref['auc'], 3)} (no depende de la semilla)",
+                      "Brier": numero(ref["brier"], 4),
+                      "Parámetros": numero(int(ref["parametros"]))})
+    if "Regresión logística (NumPy)" in evaluacion.index:
+        auc_replica = evaluacion.loc["Regresión logística (NumPy)", "auc"]
+ruta = RAIZ / "reports/semillas_pd_mlp.csv"
+if ruta.exists():
+    r = pd.read_csv(ruta)
+    filas.append({"Modelo": "Red neuronal",
+                  "AUC en prueba": f"{numero(r['auc_test'].mean(), 3)} ± {numero(r['auc_test'].std(), 3)} "
+                                   f"({len(r)} semillas)",
+                  "Brier": numero(r["brier_test"].mean(), 4),
+                  "Parámetros": numero(cargar_modelo(config["modelo_comparacion"]).metadata["parametros_entrenables"])})
 if filas:
     st.table(pd.DataFrame(filas).set_index("Modelo"))
-st.markdown("""
+replica = (f" (AUC {numero(auc_replica, 3)})" if auc_replica is not None else "")
+st.markdown(f"""
 Ambos modelos se compararon en igualdad de condiciones: los mismos datos, el mismo preprocesamiento y
-30 entrenamientos con distinta semilla cada uno. La red neuronal **no discriminó mejor** que la
-regresión logística, varió más entre entrenamientos y usa más de cien veces más parámetros. Además,
-sus puntos no se pueden repartir exactamente por característica. Por eso el simulador usa la
-regresión logística; la red se puede elegir en el menú lateral para comparar.
+la misma prueba final. La red neuronal **no discriminó mejor** que la regresión logística, cambia de
+un entrenamiento a otro y usa más de cien veces más parámetros. Además, sus puntos no se pueden
+repartir exactamente por característica. Por eso el simulador usa la regresión logística; la red se
+puede elegir en el menú lateral para comparar.
+
+La regresión logística de referencia es la del análisis del equipo (Primer_Punto.ipynb). El simulador
+usa una réplica entrenada con nuestro propio código, que da prácticamente los mismos resultados{replica}.
 
 El **AUC** es la probabilidad de que el modelo le asigne más riesgo a un mal pagador que a un buen
 pagador escogidos al azar (0,5 = azar, 1 = perfecto). Con solo la información de la solicitud, los

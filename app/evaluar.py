@@ -246,6 +246,8 @@ with simula:
     st.altair_chart(grafico.properties(height=250), width="stretch")
 
 st.divider()
+st.markdown('<p class="lema"><b>¿Me prestas?</b>: conoce tu riesgo, entiéndelo y mejóralo</p>',
+            unsafe_allow_html=True)
 st.markdown('<p class="aviso">Este simulador es un proyecto académico. El puntaje se calcula con un modelo '
             f'estadístico ({modelo.nombre}) entrenado con créditos históricos y no constituye una oferta ni '
             'una decisión de crédito.</p>', unsafe_allow_html=True)
