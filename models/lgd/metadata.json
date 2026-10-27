@@ -1,0 +1,188 @@
+{
+  "config": {
+    "semilla": 42,
+    "datos": {
+      "ruta": "data/processed/lgd_limpio.parquet",
+      "objetivo": "lgd",
+      "particion": "particion",
+      "fraccion_demo": 0.2,
+      "recortar_objetivo": [
+        0,
+        1
+      ],
+      "numericas": [
+        "loan_amnt",
+        "term",
+        "emp_length",
+        "annual_inc",
+        "dti",
+        "delinq_2yrs",
+        "antiguedad_credito_meses",
+        "inq_last_6mths",
+        "mths_since_last_delinq",
+        "mths_since_last_record",
+        "open_acc",
+        "pub_rec",
+        "revol_bal",
+        "revol_util",
+        "total_acc"
+      ],
+      "logaritmicas": [
+        "annual_inc",
+        "revol_bal"
+      ],
+      "categoricas": [
+        "home_ownership",
+        "purpose"
+      ]
+    },
+    "red": {
+      "capas_ocultas": [
+        32,
+        16
+      ],
+      "activacion": "relu",
+      "salida": "sigmoide",
+      "perdida": "ecm",
+      "l2": 0.0001,
+      "dropout": 0.1
+    },
+    "entrenamiento": {
+      "optimizador": "adam",
+      "tasa": 0.001,
+      "epocas": 200,
+      "tam_lote": 256,
+      "paciencia": 10
+    },
+    "salida": {
+      "carpeta": "models/lgd"
+    }
+  },
+  "demo": false,
+  "variables_entrada": {
+    "numericas": [
+      "loan_amnt",
+      "term",
+      "emp_length",
+      "annual_inc",
+      "dti",
+      "delinq_2yrs",
+      "antiguedad_credito_meses",
+      "inq_last_6mths",
+      "mths_since_last_delinq",
+      "mths_since_last_record",
+      "open_acc",
+      "pub_rec",
+      "revol_bal",
+      "revol_util",
+      "total_acc"
+    ],
+    "logaritmicas": [
+      "annual_inc",
+      "revol_bal"
+    ],
+    "categoricas": [
+      "home_ownership",
+      "purpose"
+    ]
+  },
+  "columnas_transformadas": [
+    "loan_amnt",
+    "term",
+    "emp_length",
+    "dti",
+    "delinq_2yrs",
+    "antiguedad_credito_meses",
+    "inq_last_6mths",
+    "mths_since_last_delinq",
+    "mths_since_last_record",
+    "open_acc",
+    "pub_rec",
+    "revol_util",
+    "total_acc",
+    "missingindicator_emp_length",
+    "missingindicator_mths_since_last_delinq",
+    "missingindicator_mths_since_last_record",
+    "missingindicator_revol_util",
+    "annual_inc",
+    "revol_bal",
+    "home_ownership_MORTGAGE",
+    "home_ownership_NONE",
+    "home_ownership_OTHER",
+    "home_ownership_OWN",
+    "home_ownership_RENT",
+    "purpose_car",
+    "purpose_credit_card",
+    "purpose_debt_consolidation",
+    "purpose_educational",
+    "purpose_home_improvement",
+    "purpose_house",
+    "purpose_major_purchase",
+    "purpose_medical",
+    "purpose_moving",
+    "purpose_other",
+    "purpose_renewable_energy",
+    "purpose_small_business",
+    "purpose_vacation",
+    "purpose_wedding"
+  ],
+  "valores_recortados": {
+    "train": 0,
+    "valid": 0,
+    "test": 0
+  },
+  "parametros_entrenables": 1793,
+  "mejor_epoca": 56,
+  "epocas_entrenadas": 66,
+  "segundos_entrenamiento": 4.669174399226904,
+  "metricas": {
+    "train": {
+      "mae": 0.13842878549543844,
+      "rmse": 0.18106145532045015,
+      "media_observada": 0.7482074499678459,
+      "media_predicha": 0.7495105958296849,
+      "ks_distribuciones": 0.2719609742099788,
+      "n": 27879
+    },
+    "valid": {
+      "mae": 0.13957916652827457,
+      "rmse": 0.18170447029805462,
+      "media_observada": 0.7511661192244681,
+      "media_predicha": 0.749881983901309,
+      "ks_distribuciones": 0.276952872821175,
+      "n": 9294
+    },
+    "test": {
+      "mae": 0.1414611371298235,
+      "rmse": 0.18511949072289394,
+      "media_observada": 0.7498831834514141,
+      "media_predicha": 0.7497948070625033,
+      "ks_distribuciones": 0.27738325801592423,
+      "n": 9294
+    }
+  },
+  "distribucion_test": {
+    "observada": {
+      "media": 0.7498831834514141,
+      "desviacion": 0.20177145967107302,
+      "q05": 0.32749351478008537,
+      "q10": 0.4498237743589743,
+      "q25": 0.6502357976190476,
+      "q50": 0.8096924255901471,
+      "q75": 0.904447556780227,
+      "q90": 0.9547031726708074,
+      "q95": 0.9743259853171156
+    },
+    "predicha": {
+      "media": 0.7497948070625033,
+      "desviacion": 0.07884432447371666,
+      "q05": 0.6439321459509213,
+      "q10": 0.6580706014130211,
+      "q25": 0.6836512147004669,
+      "q50": 0.7279695165644128,
+      "q75": 0.8262612308082411,
+      "q90": 0.8606279627297659,
+      "q95": 0.8761719602954653
+    }
+  }
+}
