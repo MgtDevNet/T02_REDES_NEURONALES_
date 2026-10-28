@@ -73,8 +73,10 @@ h1, h2, h3, h4, h5, h6, .puntaje-valor,
 [data-testid="stHeadingWithActionElements"], [data-testid="stHeadingWithActionElements"] * {{
     font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif !important;
 }}
-/* los íconos dentro de los títulos conservan su fuente de símbolos */
+/* los íconos dentro de los títulos conservan su fuente de símbolos; en markdown, Streamlit
+   dibuja :material/...: como <span role="img" translate="no"> con la fuente en línea */
 [data-testid="stIconMaterial"], [data-testid="stHeadingWithActionElements"] [data-testid="stIconMaterial"],
+[data-testid="stHeadingWithActionElements"] span[role="img"], span[role="img"][translate="no"],
 .icono {{ font-family: 'Material Symbols Rounded' !important; }}
 h1, h2, h3, h4 {{ color: {TINTA}; font-weight: 700; letter-spacing: -0.3px; }}
 /* Fondo de la página: lila claro con dos brillos morados muy tenues en las esquinas */
@@ -124,6 +126,8 @@ section[data-testid="stSidebar"] {{
 .dato {{ color: {TINTA_SUAVE}; font-size: .85rem; margin-top: 16px; }}
 .dato b {{ color: {TINTA}; font-size: 1.4rem; font-weight: 700; display: block; }}
 .aviso {{ color: {TINTA_SUAVE}; font-size: .8rem; }}
+.lema {{ text-align: center; color: {PRIMARIO}; font-size: 1.2rem; font-weight: 700; margin: 4px 0 14px 0; }}
+.lema b {{ color: {OSCURO}; }}
 /* Franja de pasos bajo el encabezado */
 .pasos {{ display: flex; gap: 14px; margin: -4px 0 22px 0; flex-wrap: wrap; }}
 .paso {{ flex: 1 1 220px; display: flex; gap: 12px; align-items: center; background: #ffffffcc;
