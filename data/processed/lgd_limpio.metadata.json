@@ -1,0 +1,15 @@
+{
+  "formula": "1 - total_rec_prncp / funded_amnt",
+  "poblacion": [
+    "Charged Off",
+    "Default"
+  ],
+  "semilla_particion": 42,
+  "particion": "aleatoria 60/20/20; no es validacion temporal",
+  "conteos": {
+    "train": 27879,
+    "test": 9294,
+    "valid": 9294
+  },
+  "origen": "loan.csv"
+}
