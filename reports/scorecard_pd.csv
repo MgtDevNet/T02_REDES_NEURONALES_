@@ -1,78 +1,78 @@
 variable,nombre,valor,puntos
-loan_amnt,Monto solicitado,2000.0,3.1
-loan_amnt,Monto solicitado,5000.0,1.8
-loan_amnt,Monto solicitado,8000.0,0.6
-loan_amnt,Monto solicitado,12000.0,-1.0
-loan_amnt,Monto solicitado,24000.0,-7.4
-emp_length,Antigüedad laboral,sin dato,-8.1
-emp_length,Antigüedad laboral,0.0,3.5
-emp_length,Antigüedad laboral,2.0,1.8
-emp_length,Antigüedad laboral,4.0,0.6
-emp_length,Antigüedad laboral,8.0,-1.1
+loan_amnt,Monto solicitado,2000.0,4.9
+loan_amnt,Monto solicitado,5000.0,2.9
+loan_amnt,Monto solicitado,8000.0,1.0
+loan_amnt,Monto solicitado,12000.0,-1.6
+loan_amnt,Monto solicitado,24000.0,-9.3
+emp_length,Antigüedad laboral,sin dato,-12.0
+emp_length,Antigüedad laboral,0.0,2.7
+emp_length,Antigüedad laboral,2.0,1.7
+emp_length,Antigüedad laboral,4.0,0.7
+emp_length,Antigüedad laboral,8.0,-1.4
 emp_length,Antigüedad laboral,10.0,-2.4
-annual_inc,Ingreso anual,22394.4,-17.3
-annual_inc,Ingreso anual,39996.0,-6.5
-annual_inc,Ingreso anual,56004.0,-0.1
-annual_inc,Ingreso anual,80000.0,6.9
-annual_inc,Ingreso anual,140000.0,17.4
-dti,Deuda / ingreso (dti),1.89,4.7
-dti,Deuda / ingreso (dti),7.82,2.2
+annual_inc,Ingreso anual,22394.4,-13.3
+annual_inc,Ingreso anual,39996.0,-4.9
+annual_inc,Ingreso anual,56004.0,-0.0
+annual_inc,Ingreso anual,80000.0,5.1
+annual_inc,Ingreso anual,140000.0,13.3
+dti,Deuda / ingreso (dti),1.89,1.8
+dti,Deuda / ingreso (dti),7.82,0.8
 dti,Deuda / ingreso (dti),13.1,-0.0
-dti,Deuda / ingreso (dti),18.39,-1.1
-dti,Deuda / ingreso (dti),23.82,-1.8
-delinq_2yrs,Moras en 2 años,0.0,1.0
-delinq_2yrs,Moras en 2 años,1.0,-4.8
-inq_last_6mths,Consultas en 6 meses,0.0,7.3
-inq_last_6mths,Consultas en 6 meses,1.0,0.5
-inq_last_6mths,Consultas en 6 meses,2.0,-6.2
-inq_last_6mths,Consultas en 6 meses,4.0,-19.5
-mths_since_last_delinq,Meses desde la última mora,sin dato,0.8
-mths_since_last_delinq,Meses desde la última mora,6.0,2.5
-mths_since_last_delinq,Meses desde la última mora,19.0,0.2
-mths_since_last_delinq,Meses desde la última mora,35.0,-1.8
-mths_since_last_delinq,Meses desde la última mora,52.0,-2.5
-mths_since_last_delinq,Meses desde la última mora,75.0,-1.4
-open_acc,Créditos abiertos,3.0,4.2
-open_acc,Créditos abiertos,6.0,1.9
-open_acc,Créditos abiertos,8.0,0.6
-open_acc,Créditos abiertos,12.0,-2.0
-open_acc,Créditos abiertos,18.0,-7.6
-pub_rec,Registros públicos,0.0,0.8
-pub_rec,Registros públicos,1.0,-12.4
-revol_bal,Saldo rotativo,267.0,-3.8
-revol_bal,Saldo rotativo,3347.0,-0.3
-revol_bal,Saldo rotativo,8204.0,0.3
-revol_bal,Saldo rotativo,16211.0,1.0
-revol_bal,Saldo rotativo,44258.4,2.1
-revol_util,Uso del cupo rotativo,2.1,22.9
-revol_util,Uso del cupo rotativo,24.1,12.1
+dti,Deuda / ingreso (dti),18.39,-0.9
+dti,Deuda / ingreso (dti),23.82,-1.7
+delinq_2yrs,Moras en 2 años,0.0,0.4
+delinq_2yrs,Moras en 2 años,1.0,-2.5
+inq_last_6mths,Consultas en 6 meses,0.0,7.1
+inq_last_6mths,Consultas en 6 meses,1.0,0.4
+inq_last_6mths,Consultas en 6 meses,2.0,-6.3
+inq_last_6mths,Consultas en 6 meses,4.0,-19.7
+mths_since_last_delinq,Meses desde la última mora,sin dato,2.1
+mths_since_last_delinq,Meses desde la última mora,6.0,-4.7
+mths_since_last_delinq,Meses desde la última mora,19.0,-4.4
+mths_since_last_delinq,Meses desde la última mora,35.0,-4.0
+mths_since_last_delinq,Meses desde la última mora,52.0,-3.7
+mths_since_last_delinq,Meses desde la última mora,75.0,-3.2
+open_acc,Créditos abiertos,3.0,4.8
+open_acc,Créditos abiertos,6.0,2.5
+open_acc,Créditos abiertos,8.0,0.9
+open_acc,Créditos abiertos,12.0,-2.2
+open_acc,Créditos abiertos,18.0,-6.9
+pub_rec,Registros públicos,0.0,0.6
+pub_rec,Registros públicos,1.0,-9.4
+revol_bal,Saldo rotativo,267.0,-5.9
+revol_bal,Saldo rotativo,3347.0,-1.0
+revol_bal,Saldo rotativo,8204.0,0.8
+revol_bal,Saldo rotativo,16211.0,2.1
+revol_bal,Saldo rotativo,44258.4,4.1
+revol_util,Uso del cupo rotativo,2.1,17.4
+revol_util,Uso del cupo rotativo,24.1,9.0
 revol_util,Uso del cupo rotativo,48.1,-0.1
-revol_util,Uso del cupo rotativo,71.7,-10.9
-revol_util,Uso del cupo rotativo,93.6,-18.9
-total_acc,Total de créditos,6.0,-1.9
-total_acc,Total de créditos,13.0,-0.9
-total_acc,Total de créditos,20.0,-0.2
+revol_util,Uso del cupo rotativo,71.7,-9.0
+revol_util,Uso del cupo rotativo,93.6,-17.3
+total_acc,Total de créditos,6.0,-3.3
+total_acc,Total de créditos,13.0,-1.8
+total_acc,Total de créditos,20.0,-0.3
 total_acc,Total de créditos,28.0,1.4
-total_acc,Total de créditos,43.0,4.3
-antig_credito_meses,Antigüedad crediticia,53.0,-0.7
-antig_credito_meses,Antigüedad crediticia,102.0,-0.1
-antig_credito_meses,Antigüedad crediticia,145.0,-0.1
-antig_credito_meses,Antigüedad crediticia,199.0,0.3
-antig_credito_meses,Antigüedad crediticia,319.0,1.4
-home_ownership,Vivienda,MORTGAGE,0.7
-home_ownership,Vivienda,OWN,1.7
-home_ownership,Vivienda,RENT,-0.8
-home_ownership,Vivienda,otras,-2.9
-purpose,Propósito,car,1.6
-purpose,Propósito,credit_card,9.7
+total_acc,Total de créditos,43.0,4.5
+antig_credito_meses,Antigüedad crediticia,53.0,-2.0
+antig_credito_meses,Antigüedad crediticia,102.0,-1.1
+antig_credito_meses,Antigüedad crediticia,145.0,-0.3
+antig_credito_meses,Antigüedad crediticia,199.0,0.7
+antig_credito_meses,Antigüedad crediticia,319.0,2.9
+home_ownership,Vivienda,MORTGAGE,1.1
+home_ownership,Vivienda,OWN,2.6
+home_ownership,Vivienda,RENT,-1.3
+home_ownership,Vivienda,otras,-5.2
+purpose,Propósito,car,4.1
+purpose,Propósito,credit_card,10.5
 purpose,Propósito,debt_consolidation,0.0
-purpose,Propósito,educational,-4.2
-purpose,Propósito,home_improvement,-1.9
-purpose,Propósito,major_purchase,4.9
-purpose,Propósito,medical,-4.1
-purpose,Propósito,moving,-4.6
-purpose,Propósito,other,-5.9
-purpose,Propósito,small_business,-18.9
-purpose,Propósito,vacation,0.1
-purpose,Propósito,wedding,3.3
-purpose,Propósito,otras,-0.7
+purpose,Propósito,educational,-5.9
+purpose,Propósito,home_improvement,-3.2
+purpose,Propósito,major_purchase,6.4
+purpose,Propósito,medical,-6.3
+purpose,Propósito,moving,-5.8
+purpose,Propósito,other,-5.2
+purpose,Propósito,small_business,-22.4
+purpose,Propósito,vacation,-1.2
+purpose,Propósito,wedding,5.3
+purpose,Propósito,otras,-0.9
