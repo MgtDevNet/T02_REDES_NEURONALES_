@@ -173,6 +173,81 @@ python -m scripts.parte1_pd.repetir_semillas_pd --nombre prueba --set red.capas_
 `evaluar_pd` sobrescribe los archivos de evaluación en `reports/`. Para volver a los originales:
 `git checkout reports/ models/`.
 
+### Ejemplos para explorar y qué esperar
+
+Resultados reales con todos los datos y la semilla 42. Cada fila es un cambio frente a la
+configuración actual, que da AUC **0,693** en entrenamiento y **0,625** en prueba (mejor época 10).
+Todos se ejecutan así, cambiando solo los `--set`:
+
+```bash
+python -m scripts.parte1_pd.entrenar_pd --set red.dropout=0 --set salida.carpeta=models/prueba
+```
+
+**Regularización: el equilibrio entre memorizar y generalizar**
+
+| Cambio (`--set`) | Qué esperar | AUC entren. → prueba |
+|---|---|---|
+| `red.dropout=0` | Memoriza más: sube en entrenamiento, baja en prueba | 0,696 → 0,622 |
+| `red.dropout=0.6` | Le cuesta aprender: baja en ambos | 0,680 → 0,622 |
+| `red.l2=0` | Sin penalización: más sobreajuste | 0,699 → 0,622 |
+| `red.l2=0.1` | Pesos casi en cero: la red no aprende | 0,635 → 0,591 |
+
+Poca regularización sobreajusta y demasiada no deja aprender. La configuración actual
+(dropout 0,3 y L2 0,0014) está en el punto medio.
+
+**Tamaño de la red: más grande no es mejor**
+
+| Cambio (`--set`) | Parámetros | AUC entren. → prueba | Tiempo |
+|---|---|---|---|
+| `red.capas_ocultas=8` | 257 | 0,686 → 0,628 | 0,9 s |
+| (actual: 64, 32) | 4.097 | 0,693 → 0,625 | 2,6 s |
+| `red.capas_ocultas=256,128` | 40.961 | 0,694 → 0,625 | 11,5 s |
+| `red.capas_ocultas=256,128` `red.dropout=0` `red.l2=0` | 40.961 | 0,726 → 0,615 | 5,5 s |
+| `red.capas_ocultas=` `red.dropout=0` `red.l2=0.001` (logística) | 31 | 0,681 → 0,630 | 1,2 s |
+
+Una red pequeña, o sin capas ocultas, rinde igual o mejor que una de 40 mil parámetros. La red
+grande sin regularizar es el ejemplo más claro de sobreajuste: el mejor AUC en entrenamiento y el
+peor en prueba.
+
+**Activación**
+
+| Cambio (`--set`) | Qué esperar | AUC en prueba |
+|---|---|---|
+| `red.activacion=tanh` | Parecido a ReLU, aprende más despacio | 0,627 (mejor época 19) |
+| `red.activacion=sigmoide` | Gradientes pequeños: aprende peor | 0,615 |
+
+**Optimizador y tasa de aprendizaje**
+
+| Cambio (`--set`) | Qué esperar | AUC en prueba | Mejor época |
+|---|---|---|---|
+| `entrenamiento.tasa=0.05` | Pasos demasiado grandes: se pasa del mínimo | 0,616 | 3 |
+| `entrenamiento.tasa=0.00005` | Pasos diminutos: usa las 200 épocas y no termina | 0,622 | 199 de 200 |
+| `entrenamiento.optimizador=sgd` | SGD con la tasa de Adam es muy lento | 0,588 | 200 de 200 |
+| `entrenamiento.optimizador=sgd` `entrenamiento.tasa=0.1` | Con una tasa adecuada, SGD se acerca a Adam | 0,624 | 77 |
+
+La tasa de aprendizaje es el hiperparámetro más delicado. Adam funciona con tasas pequeñas porque
+ajusta el paso de cada peso; SGD necesita una tasa mucho mayor.
+
+**Entrenamiento y semilla**
+
+| Cambio (`--set`) | Qué esperar | AUC en prueba |
+|---|---|---|
+| `entrenamiento.tam_lote=32` | Más actualizaciones por época, más ruido | 0,624 (mejor época 3) |
+| `entrenamiento.paciencia=1` | Se detiene al primer tropiezo, antes de tiempo | 0,619 (5 épocas) |
+| `semilla=7` | Misma configuración, otra inicialización | 0,625 (mejor época 17) |
+
+Con otra semilla el AUC queda casi igual, pero la mejor época cambia de 10 a 17. Por eso se
+reportan 30 semillas y no una sola corrida.
+
+**Tres ejemplos para mostrar en vivo**
+
+1. `--set red.capas_ocultas=256,128 --set red.dropout=0 --set red.l2=0`: sobreajuste a la vista (0,726 en entrenamiento, 0,615 en prueba).
+2. `--set red.l2=0.1`: demasiada regularización, la red no aprende (0,591).
+3. `--set red.capas_ocultas= --set red.dropout=0 --set red.l2=0.001`: la regresión logística gana con 31 parámetros (0,630).
+
+Los tiempos dependen del computador. Con `--demo` todo corre más rápido, pero los números cambian
+porque se usa solo el 20 % de los datos.
+
 ---
 
 ## 6. Opcional: rehacer los datos desde Kaggle
