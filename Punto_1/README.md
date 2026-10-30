@@ -142,23 +142,30 @@ Hay dos formas, y ninguna toca el código:
 | `[pd.scorecard]` | Escala de puntos | `puntaje_base = 600`, `odds_base = 50`, `pdo = 20` |
 | `[pd.salida]` | Dónde se guarda el modelo | `carpeta = models/pd` |
 
+> **Importante: `entrenar_pd` siempre guarda el modelo que entrena.** `--set` no modifica
+> `config.ini`, pero el modelo nuevo se guarda en la carpeta de `[pd.salida]`, que es
+> `models/pd`: la que usa la app. Para pruebas, agregue siempre
+> `--set salida.carpeta=models/prueba`, como en todos los ejemplos de abajo. Si lo olvida,
+> recupere el modelo original con `git checkout models/`.
+
 Ejemplos:
 
 ```bash
 # otra arquitectura
-python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas=64,32,16 --set red.activacion=tanh
+python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas=64,32,16 --set red.activacion=tanh --set salida.carpeta=models/prueba
 
 # más regularización
-python -m scripts.parte1_pd.entrenar_pd --set red.dropout=0.5 --set red.l2=0.01
+python -m scripts.parte1_pd.entrenar_pd --set red.dropout=0.5 --set red.l2=0.01 --set salida.carpeta=models/prueba
 
 # otro optimizador y otra tasa de aprendizaje
-python -m scripts.parte1_pd.entrenar_pd --set entrenamiento.optimizador=sgd --set entrenamiento.tasa=0.01
+python -m scripts.parte1_pd.entrenar_pd --set entrenamiento.optimizador=sgd --set entrenamiento.tasa=0.01 --set salida.carpeta=models/prueba
 
 # otra semilla
-python -m scripts.parte1_pd.entrenar_pd --set semilla=7
+python -m scripts.parte1_pd.entrenar_pd --set semilla=7 --set salida.carpeta=models/prueba
 ```
 
-**Para probar sin dañar los modelos de la app**, agregue `--set salida.carpeta=models/prueba`.
+Si cambia los hiperparámetros editando `config.ini`, cambie también `carpeta = models/prueba` en
+`[pd.salida]`, y al terminar deje todo como estaba con `git checkout config.ini models/`.
 
 **Versión rápida** (20 % de los datos, unos segundos): agregue `--demo`.
 
@@ -177,7 +184,7 @@ python -m scripts.parte1_pd.repetir_semillas_pd --nombre prueba --set red.capas_
 
 Resultados reales con todos los datos y la semilla 42. Cada fila es un cambio frente a la
 configuración actual, que da AUC **0,693** en entrenamiento y **0,625** en prueba (mejor época 10).
-Todos se ejecutan así, cambiando solo los `--set`:
+Las tablas muestran solo lo que cambia; todos se ejecutan así, siempre con `salida.carpeta`:
 
 ```bash
 python -m scripts.parte1_pd.entrenar_pd --set red.dropout=0 --set salida.carpeta=models/prueba
@@ -241,9 +248,16 @@ reportan 30 semillas y no una sola corrida.
 
 **Tres ejemplos para mostrar en vivo**
 
-1. `--set red.capas_ocultas=256,128 --set red.dropout=0 --set red.l2=0`: sobreajuste a la vista (0,726 en entrenamiento, 0,615 en prueba).
-2. `--set red.l2=0.1`: demasiada regularización, la red no aprende (0,591).
-3. `--set red.capas_ocultas= --set red.dropout=0 --set red.l2=0.001`: la regresión logística gana con 31 parámetros (0,630).
+```bash
+# 1. sobreajuste a la vista (0,726 en entrenamiento, 0,615 en prueba)
+python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas=256,128 --set red.dropout=0 --set red.l2=0 --set salida.carpeta=models/prueba
+
+# 2. demasiada regularización: la red no aprende (0,591)
+python -m scripts.parte1_pd.entrenar_pd --set red.l2=0.1 --set salida.carpeta=models/prueba
+
+# 3. la regresión logística gana con 31 parámetros (0,630)
+python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas= --set red.dropout=0 --set red.l2=0.001 --set salida.carpeta=models/prueba
+```
 
 Los tiempos dependen del computador. Con `--demo` todo corre más rápido, pero los números cambian
 porque se usa solo el 20 % de los datos.
