@@ -39,7 +39,8 @@ guardan en `data/processed/`.
 ## Cómo ejecutar
 
 Todos los hiperparámetros están en **`config.ini`**. Se edita un valor, se guarda y se vuelve
-a ejecutar; no hay que tocar el código.
+a ejecutar; no hay que tocar el código. Para probar hiperparámetros de la Parte 1 sin guardar
+nada, use el notebook `pruebas_punto_1.ipynb`.
 
 ### Parte 1, de punta a punta
 
@@ -63,6 +64,13 @@ Datos de la Parte 1: solo créditos a 36 meses, con partición temporal por fech
 originación (train jun-2007 a dic-2011, valid ene-jun 2012, test jul-dic 2012). La
 justificación está en el docstring de `scripts/parte1_pd/preparar_datos_pd.py` y en el reporte.
 
+### Probar hiperparámetros de la Parte 1
+
+Use el notebook **`pruebas_punto_1.ipynb`**, en la raíz del repositorio. Se cambia un valor, se
+ejecuta la celda y las métricas aparecen ahí mismo. No guarda nada: `config.ini` y el modelo de
+la app (`models/pd`) no cambian. Cómo abrirlo y qué resultados esperar:
+[sección 5 de Punto_1/README.md](Punto_1/README.md#5-cambiar-hiperparámetros).
+
 ### Comandos generales
 
 ```bash
@@ -74,12 +82,11 @@ python -m scripts.parte2_lgd.entrenar_lgd        # Parte 2: pérdida dado incump
 python -m scripts.parte2_lgd.entrenar_lgd --demo
 ```
 
-Para cambiar un valor solo en una ejecución, sin editar `config.ini`, se usa `--set`
-con la forma `seccion.clave=valor` (la sección sin el prefijo `pd.` / `lgd.`):
+Para cambiar un valor solo en una ejecución por terminal, sin editar `config.ini`, se usa
+`--set` con la forma `seccion.clave=valor` (la sección sin el prefijo `pd.` / `lgd.`). El modelo
+entrenado se guarda en la carpeta de `salida`:
 
 ```bash
-python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas=64,32 --set red.dropout=0.3
-python -m scripts.parte1_pd.entrenar_pd --set entrenamiento.tasa=0.01 --set semilla=7
 python -m scripts.parte1_pd.entrenar_pd --set scorecard.pdo=40
 python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas= --set red.dropout=0 --set red.l2=0.001 \
                                 --set salida.carpeta=models/pd_logistica   # regresión logística
@@ -112,6 +119,7 @@ python -m pytest -q
 
 ```
 config.ini           hiperparámetros de todos los experimentos
+pruebas_punto_1.ipynb  pruebas de hiperparámetros de la Parte 1, sin guardar nada
 scripts/parte1_pd/   Parte 1 (PD): preparar datos, entrenar, buscar hiperparámetros, semillas,
                      evaluar, interpretar y scorecard
 scripts/parte2_lgd/  Parte 2 (LGD): preparar, entrenar, evaluar y estimar la pérdida esperada
