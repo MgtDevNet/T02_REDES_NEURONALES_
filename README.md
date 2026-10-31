@@ -2,6 +2,10 @@
 
 Redes neuronales y algoritmos bioinspirados — Universidad Nacional de Colombia, 2026-02.
 
+- **Aplicación web:** https://meprestas.streamlit.app/
+- **Informe técnico (entrada de blog):** https://mgtdevnet.github.io/T02_REDES_NEURONALES_/
+- **Video promocional:** https://www.youtube.com/watch?v=cy8w_VjKIy0
+
 ## Instalación
 
 Requiere Python 3.12. Desde la carpeta del repositorio:
@@ -64,6 +68,11 @@ Datos de la Parte 1: solo créditos a 36 meses, con partición temporal por fech
 originación (train jun-2007 a dic-2011, valid ene-jun 2012, test jul-dic 2012). La
 justificación está en el docstring de `scripts/parte1_pd/preparar_datos_pd.py` y en el reporte.
 
+### Parte 2, de punta a punta
+
+Guía de los notebooks y los scripts de LGD y pérdida esperada:
+[Punto_2/README.md](Punto_2/README.md).
+
 ### Probar hiperparámetros de la Parte 1
 
 Use el notebook **`pruebas_punto_1.ipynb`**, en la raíz del repositorio. Se cambia un valor, se
@@ -119,7 +128,8 @@ python -m pytest -q
 
 ```
 config.ini           hiperparámetros de todos los experimentos
-pruebas_punto_1.ipynb  pruebas de hiperparámetros de la Parte 1, sin guardar nada
+pruebas_punto_1.ipynb
+                     pruebas de hiperparámetros de la Parte 1, sin guardar nada
 scripts/parte1_pd/   Parte 1 (PD): preparar datos, entrenar, buscar hiperparámetros, semillas,
                      evaluar, interpretar y scorecard
 scripts/parte2_lgd/  Parte 2 (LGD): preparar, entrenar, evaluar y estimar la pérdida esperada
@@ -129,7 +139,7 @@ data/processed/      datos procesados que usan los modelos
 src/                 código compartido: limpieza, red neuronal, scorecard, métricas
 models/              modelos entrenados (la app los carga sin reentrenar)
 app/                 aplicación web (Streamlit): app.py, evaluar.py, como_funciona.py, motor.py
-reports/             resultados de la Parte 1 (búsqueda, semillas, evaluación, scorecard)
+reports/             resultados de las Partes 1 y 2 (búsqueda, semillas, evaluación, scorecard, pérdida esperada)
 reports/figures/     figuras regenerables con evaluar_pd e interpretar_pd
 tests/               pruebas (python -m pytest -q)
 ```

@@ -282,7 +282,7 @@ Solo si quiere repetir también la limpieza:
    validación ene–jun 2012, prueba jul–dic 2012).
 3. Vuelva a ejecutar el notebook `Punto_1/Primer_Punto.ipynb` (la regresión logística de
    referencia) para que sus predicciones queden alineadas con los nuevos datos. El notebook necesita
-   Jupyter y algunas librerías adicionales: `pip install jupyter seaborn statsmodels`.
+   Jupyter y algunas librerías adicionales: `pip install jupyter statsmodels`.
 
 ---
 

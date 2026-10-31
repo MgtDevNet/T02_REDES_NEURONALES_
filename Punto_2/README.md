@@ -22,7 +22,7 @@ Los notebooks están organizados por etapa temática en las carpetas `Analisis_d
 | **`analisis_descriptivo_LGD.ipynb`** | `Analisis_descriptivo/` | • Filtrado de créditos en default definitivo (`Charged Off` y `Default`, 46.467 registros).<br>• Justificación de por qué no se usa `out_prncp` y cálculo de LGD observada.<br>• Pruebas ANOVA y Tukey HSD para agrupar las calificaciones de riesgo `F` y `G`. |
 | **`modelo_regresion_lineal_LGD.ipynb`** | `Modelos/` | • Ajuste de la regresión lineal por mínimos cuadrados ordinarios (OLS) con variables indicadoras.<br>• Tabla de significancia estadística, $R^2$, MAE ($0{,}1425$) y RMSE ($0{,}1862$).<br>• Detección de predicciones fuera del soporte $[0, 1]$. |
 | **`Punto_2_30_semillas_lgd.ipynb`** | `Modelos/` | • Presupuesto de búsqueda de hiperparámetros sobre la partición de validación (semilla 42).<br>• Reentrenamiento de la red ganadora a lo largo de **30 semillas independientes** (semillas 42 a 71 con MAE medio de $0{,}141219$, consistente con las semillas 0 a 29 de `src/experimentos_lgd.py` con MAE de $0{,}141308$).<br>• Comparación de distribuciones (cuantiles y CDFs) y justificación teórica de la compresión de varianza.<br>• Genera las figuras `figura_variabilidad_30_semillas.png` y `figura_comparacion_distribuciones_lgd.png`. |
-| **`Punto_2_perdida_esperada.ipynb`** | `Modelos/` | • Carga simultánea de los modelos entrenados de PD y LGD.<br>• Estimación de la pérdida esperada sobre la cohorte de prueba de créditos a 36 meses con estado definitivo (10.000 créditos muestreados representativos).<br>• Balance de cartera (tasa de pérdida agregada del $8{,}85\,\%$ en prueba), curva de concentración de Lorenz y dispersión $PD$ vs. $LGD$.<br>• Genera `figura_perdida_esperada_analisis.png` y `figura_dispersion_pd_lgd_el.png`. |
+| **`Punto_2_perdida_esperada.ipynb`** | `Modelos/` | • Carga simultánea de los modelos entrenados de PD y LGD.<br>• Estimación de la pérdida esperada sobre la cohorte de prueba de créditos a 36 meses con estado definitivo (10.000 créditos muestreados representativos).<br>• Balance de cartera (tasa de pérdida agregada del 8,85 % en prueba), curva de concentración de Lorenz y dispersión $PD$ vs. $LGD$.<br>• Genera `figura_perdida_esperada_analisis.png` y `figura_dispersion_pd_lgd_el.png`. |
 | **`Punto_2_completo.ipynb`** | `Modelos/` | • Notebook integral que consolida todo el flujo de trabajo del Punto 2 de principio a fin en un único archivo ejecutable. |
 
 ---
@@ -34,8 +34,10 @@ Tiene tres formas equivalentes de ejecutar el código:
 ### Opción A: Ejecución interactiva desde los Notebooks (Recomendada para explorar)
 
 1. Abra el notebook deseado en **VS Code**, **Jupyter Lab** o **Jupyter Notebook**.
-2. Asegúrese de tener seleccionado el kernel del entorno virtual (`.venv` o Python 3.11/3.12 con los paquetes de `requirements.txt`).
+2. Asegúrese de tener seleccionado el kernel del entorno virtual (`.venv` con Python 3.12 y los paquetes de `requirements.txt`).
 3. Seleccione la opción **"Run All"** (Ejecutar todas las celdas). Los notebooks ya contienen las rutas relativas configuradas para leer los datos procesados en `data/processed/` o el archivo original en `datos/loan/loan.csv`, `Punto_2/loan/loan.csv` o `loan.csv`.
+
+`analisis_descriptivo_LGD.ipynb` y `modelo_regresion_lineal_LGD.ipynb` necesitan además `statsmodels`, que no está en `requirements.txt`: ejecute `pip install statsmodels` antes de abrirlos.
 
 ---
 
@@ -107,4 +109,5 @@ print(f"Pérdida esperada media por crédito: ${resumen_cartera['el_media_por_cr
 Al ejecutar los scripts o notebooks, los resultados clave quedan almacenados automáticamente en:
 - `models/lgd/`: Modelo neuronal entrenado (`red.npz`), preprocesador ajustado con train (`preprocesador.joblib`), predicciones de prueba (`predicciones_test.npz`) y metadatos del entrenamiento (`metadata.json`).
 - `reports/lgd/` y `reports/experimentos_lgd/`: Tablas de resultados en formato CSV (`referencia_ols.csv`, `resumen_semillas.csv`, `corridas.csv`, `distribucion_lgd.csv`, `busqueda_hiperparametros_lgd.csv`, `tabla_comparativa_ols_vs_mlp.csv`).
-- `reports/`: Figuras de alta resolución para el informe final (`figura_variabilidad_30_semillas.png`, `figura_comparacion_distribuciones_lgd.png`, `figura_perdida_esperada_analisis.png`, `figura_dispersion_pd_lgd_el.png`) y el archivo de estimaciones a nivel de préstamo `perdida_esperada.csv`.
+- `reports/lgd/`: Figuras de las 30 semillas y de las distribuciones (`figura_variabilidad_30_semillas.png`, `figura_comparacion_distribuciones_lgd.png`).
+- `reports/`: Figuras de la pérdida esperada (`figura_perdida_esperada_analisis.png`, `figura_dispersion_pd_lgd_el.png`) y el archivo de estimaciones a nivel de préstamo `perdida_esperada.csv`.
