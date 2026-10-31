@@ -22,7 +22,7 @@ Los notebooks están organizados por etapa temática en las carpetas `Analisis_d
 | **`analisis_descriptivo_LGD.ipynb`** | `Analisis_descriptivo/` | • Filtrado de créditos en default definitivo (`Charged Off` y `Default`, 46.467 registros).<br>• Justificación de por qué no se usa `out_prncp` y cálculo de LGD observada.<br>• Pruebas ANOVA y Tukey HSD para agrupar las calificaciones de riesgo `F` y `G`. |
 | **`modelo_regresion_lineal_LGD.ipynb`** | `Modelos/` | • Ajuste de la regresión lineal por mínimos cuadrados ordinarios (OLS) con variables indicadoras.<br>• Tabla de significancia estadística, $R^2$, MAE ($0{,}1425$) y RMSE ($0{,}1862$).<br>• Detección de predicciones fuera del soporte $[0, 1]$. |
 | **`Punto_2_30_semillas_lgd.ipynb`** | `Modelos/` | • Presupuesto de búsqueda de hiperparámetros sobre la partición de validación (semilla 42).<br>• Reentrenamiento de la red ganadora a lo largo de **30 semillas independientes** (semillas 42 a 71 con MAE medio de $0{,}141219$, consistente con las semillas 0 a 29 de `src/experimentos_lgd.py` con MAE de $0{,}141308$).<br>• Comparación de distribuciones (cuantiles y CDFs) y justificación teórica de la compresión de varianza.<br>• Genera las figuras `figura_variabilidad_30_semillas.png` y `figura_comparacion_distribuciones_lgd.png`. |
-| **`Punto_2_perdida_esperada.ipynb`** | `Modelos/` | • Carga simultánea de los modelos entrenados de PD y LGD.<br>• Estimación de la pérdida esperada sobre la cohorte de prueba de créditos a 36 meses con estado definitivo (10.000 créditos muestreados o el total de 28.458 créditos de prueba).<br>• Balance de cartera (tasa de pérdida agregada del $8{,}81\,\%$ en prueba), curva de concentración de Lorenz y dispersión $PD$ vs. $LGD$.<br>• Genera `figura_perdida_esperada_analisis.png` y `figura_dispersion_pd_lgd_el.png`. |
+| **`Punto_2_perdida_esperada.ipynb`** | `Modelos/` | • Carga simultánea de los modelos entrenados de PD y LGD.<br>• Estimación de la pérdida esperada sobre la cohorte de prueba de créditos a 36 meses con estado definitivo (10.000 créditos muestreados representativos).<br>• Balance de cartera (tasa de pérdida agregada del $8{,}85\,\%$ en prueba), curva de concentración de Lorenz y dispersión $PD$ vs. $LGD$.<br>• Genera `figura_perdida_esperada_analisis.png` y `figura_dispersion_pd_lgd_el.png`. |
 | **`Punto_2_completo.ipynb`** | `Modelos/` | • Notebook integral que consolida todo el flujo de trabajo del Punto 2 de principio a fin en un único archivo ejecutable. |
 
 ---
@@ -65,7 +65,7 @@ python -m scripts.parte2_lgd.evaluar_lgd
 #### 4. Estimar la pérdida esperada de cartera ($E[L]$):
 Combina los modelos entrenados de PD y LGD sobre una cartera de créditos y genera el consolidado crédito por crédito en `reports/perdida_esperada.csv`:
 ```bash
-python -m scripts.parte2_lgd.estimar_perdida --creditos data/processed/pd_limpio.parquet
+python -m scripts.parte2_lgd.estimar_perdida --creditos data/processed/cohorte_perdida.parquet
 ```
 
 ---

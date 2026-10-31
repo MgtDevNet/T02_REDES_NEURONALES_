@@ -25,10 +25,11 @@ def calcular_perdida_esperada(pd, lgd, ead):
 def estimar_perdida_esperada_cartera(ruta_modelo_pd='models/pd/red.npz',
                                      ruta_modelo_lgd='models/lgd/red.npz',
                                      tamano_muestra=10000,
-                                     ruta_datos='data/processed/pd_limpio.parquet',
+                                     ruta_datos='data/processed/cohorte_perdida.parquet',
                                      semilla=42):
     """Estima la pérdida esperada agregada y por crédito sobre la cohorte de prueba.
 
+    Utiliza el identificador real (`id`) y el capital financiado real (`funded_amnt`).
     Función de integración compatible con la Opción C del README.
     """
     from src.red_neuronal import RedNeuronal
@@ -42,7 +43,11 @@ def estimar_perdida_esperada_cartera(ruta_modelo_pd='models/pd/red.npz',
     red_lgd = RedNeuronal.cargar(Path(ruta_modelo_lgd))
     pre_lgd = joblib.load(p_lgd / 'preprocesador.joblib')
 
-    df = pd.read_parquet(ruta_datos)
+    ruta = Path(ruta_datos)
+    if not ruta.exists():
+        ruta = Path('data/processed/pd_limpio.parquet')
+    df = pd.read_parquet(ruta)
+
     if 'particion' in df.columns:
         df_eval = df[df['particion'] == 'test'].copy()
     else:
@@ -52,14 +57,22 @@ def estimar_perdida_esperada_cartera(ruta_modelo_pd='models/pd/red.npz',
         df_eval = df_eval.sample(n=tamano_muestra, random_state=semilla)
     df_eval = df_eval.reset_index(drop=True)
 
+    if 'id' in df_eval.columns:
+        id_real = df_eval['id'].to_numpy()
+    else:
+        id_real = df_eval.index.to_numpy()
+
+    if 'funded_amnt' in df_eval.columns:
+        ead = pd.to_numeric(df_eval['funded_amnt'], errors='coerce').to_numpy(dtype=float)
+    else:
+        ead = pd.to_numeric(df_eval['loan_amnt'], errors='coerce').to_numpy(dtype=float)
+
     if 'antiguedad_credito_meses' not in df_eval.columns and 'antig_credito_meses' in df_eval.columns:
         df_eval['antiguedad_credito_meses'] = df_eval['antig_credito_meses']
     if 'term' not in df_eval.columns:
         df_eval['term'] = 36.0
     if 'mths_since_last_record' not in df_eval.columns:
         df_eval['mths_since_last_record'] = np.nan
-    if 'funded_amnt' not in df_eval.columns:
-        df_eval['funded_amnt'] = df_eval['loan_amnt']
 
     X_pd = pre_pd.transform(df_eval[list(pre_pd.feature_names_in_)])
     pd_hat = red_pd.predecir(X_pd)
@@ -67,7 +80,6 @@ def estimar_perdida_esperada_cartera(ruta_modelo_pd='models/pd/red.npz',
     X_lgd = pre_lgd.transform(df_eval[list(pre_lgd.feature_names_in_)])
     lgd_hat = red_lgd.predecir(X_lgd)
 
-    ead = df_eval['funded_amnt'].to_numpy(dtype=float)
     el = calcular_perdida_esperada(pd_hat, lgd_hat, ead)
 
     total_ead = float(ead.sum())
@@ -75,7 +87,7 @@ def estimar_perdida_esperada_cartera(ruta_modelo_pd='models/pd/red.npz',
     tasa_perdida = total_el / total_ead if total_ead > 0 else 0.0
 
     df_perdidas = pd.DataFrame({
-        'id': df_eval.get('id', pd.Series(df_eval.index)),
+        'id': id_real,
         'funded_amnt': ead,
         'pd': pd_hat,
         'lgd_proxy': lgd_hat,

@@ -17,7 +17,8 @@ from scripts.parte2_lgd.entrenar_lgd import guardar
 
 
 def ejecutar(ruta='data/processed/lgd_limpio.parquet', salida='reports/experimentos_lgd',
-             demo=False, epocas=200, semillas=None, candidatos=None, config='config.ini'):
+             demo=False, epocas=200, semillas=None, candidatos=None, config='config.ini',
+             semilla_busqueda=42):
     """Selecciona solo con validación; test se usa al evaluar la configuración final.
 
     Una referencia OLS; búsqueda finita de redes con semilla 42; réplicas finales
@@ -80,7 +81,7 @@ def ejecutar(ruta='data/processed/lgd_limpio.parquet', salida='reports/experimen
 
     busqueda = []
     for i,candidato in enumerate(candidatos):
-        red,segundos = ajustar(candidato,42)
+        red,segundos = ajustar(candidato,semilla_busqueda)
         busqueda.append(dict(candidato=i,mae_valid=mae(y['valid'],red.predecir(X['valid'])),
                              segundos=segundos,parametros=red.contar_parametros()))
     tabla_busqueda = pd.DataFrame(busqueda)
@@ -141,7 +142,7 @@ def ejecutar_busqueda_y_semillas_lgd(datos=None, semilla_busqueda=42, semillas_e
         ruta = str(datos)
     else:
         ruta = 'data/processed/lgd_limpio.parquet'
-    return ejecutar(ruta=ruta, salida=salida, semillas=semillas_evaluacion, **kwargs)
+    return ejecutar(ruta=ruta, salida=salida, semillas=semillas_evaluacion, semilla_busqueda=semilla_busqueda, **kwargs)
 
 
 if __name__ == '__main__':
