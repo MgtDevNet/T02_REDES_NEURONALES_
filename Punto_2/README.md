@@ -35,7 +35,7 @@ Tiene tres formas equivalentes de ejecutar el código:
 
 1. Abra el notebook deseado en **VS Code**, **Jupyter Lab** o **Jupyter Notebook**.
 2. Asegúrese de tener seleccionado el kernel del entorno virtual (`.venv` con Python 3.12 y los paquetes de `requirements.txt`).
-3. Seleccione la opción **"Run All"** (Ejecutar todas las celdas). Los notebooks ya contienen las rutas relativas configuradas para leer los datos procesados en `data/processed/` o el archivo original en `datos/loan/loan.csv`, `Punto_2/loan/loan.csv` o `loan.csv`.
+3. Seleccione la opción **"Run All"** (Ejecutar todas las celdas). `Punto_2_30_semillas_lgd.ipynb` y `Punto_2_perdida_esperada.ipynb` corren con los datos procesados que ya vienen en `data/processed/`, sin descargar nada. `analisis_descriptivo_LGD.ipynb` y `modelo_regresion_lineal_LGD.ipynb` leen el archivo original de Kaggle: copie `loan.csv` a la carpeta del notebook.
 
 `analisis_descriptivo_LGD.ipynb` y `modelo_regresion_lineal_LGD.ipynb` necesitan además `statsmodels`, que no está en `requirements.txt`: ejecute `pip install statsmodels` antes de abrirlos.
 
