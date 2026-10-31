@@ -43,11 +43,14 @@ a ejecutar; no hay que tocar el código.
 
 ### Parte 1, de punta a punta
 
+Guía paso a paso para replicar la Parte 1 desde cero, con los resultados esperados:
+[Punto_1/README.md](Punto_1/README.md).
+
 ```bash
 # los scripts se ejecutan desde la raíz del repositorio, como módulos (python -m)
 python -m scripts.parte1_pd.preparar_datos_pd          # loan.csv -> data/processed/pd_limpio.parquet (ya incluido en el repo)
 python -m scripts.parte1_pd.entrenar_pd                # MLP final -> models/pd
-python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas= --set red.dropout=0 \
+python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas= --set red.dropout=0 --set red.l2=0.001 \
                                 --set salida.carpeta=models/pd_logistica   # logística en NumPy (la usa la app)
 python -m scripts.parte1_pd.evaluar_pd                 # prueba: MLP frente a la logística de Primer_Punto.ipynb (sin reentrenar)
 python -m scripts.parte1_pd.interpretar_pd             # importancia por permutación y dependencia parcial
@@ -78,7 +81,7 @@ con la forma `seccion.clave=valor` (la sección sin el prefijo `pd.` / `lgd.`):
 python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas=64,32 --set red.dropout=0.3
 python -m scripts.parte1_pd.entrenar_pd --set entrenamiento.tasa=0.01 --set semilla=7
 python -m scripts.parte1_pd.entrenar_pd --set scorecard.pdo=40
-python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas= --set red.dropout=0 \
+python -m scripts.parte1_pd.entrenar_pd --set red.capas_ocultas= --set red.dropout=0 --set red.l2=0.001 \
                                 --set salida.carpeta=models/pd_logistica   # regresión logística
 python -m scripts.parte2_lgd.entrenar_lgd --set red.perdida=entropia_cruzada  # respuesta fraccional
 python -m scripts.parte2_lgd.entrenar_lgd --set red.capas_ocultas= --set red.salida=identidad \
