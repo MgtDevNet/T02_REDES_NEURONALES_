@@ -1,0 +1,5 @@
+Métrica,Referencia OLS,Red MLP (Media ± Desv),Mejora Relativa (%),Semillas que Superan OLS
+MAE (Test),0.142536,0.141219 ± 0.000345,+0.92%,30/30
+RMSE (Test),0.186237,0.185083 ± 0.000142,+0.62%,30/30
+Parámetros,39,1793,-,-
+Tiempo Ajuste (s),0.2568,14.14 ± 5.70,-,-

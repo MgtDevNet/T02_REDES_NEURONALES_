@@ -1,0 +1,122 @@
+{
+  "demo": false,
+  "semillas": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "epocas_maximas": 200,
+  "candidatos": [
+    {
+      "capas_ocultas": [
+        16
+      ],
+      "activacion": "tanh",
+      "l2": 0.0001,
+      "dropout": 0.0,
+      "tasa": 0.001
+    },
+    {
+      "capas_ocultas": [
+        32,
+        16
+      ],
+      "activacion": "relu",
+      "l2": 0.0001,
+      "dropout": 0.1,
+      "tasa": 0.001
+    },
+    {
+      "capas_ocultas": [
+        32,
+        16
+      ],
+      "activacion": "tanh",
+      "l2": 0.001,
+      "dropout": 0.1,
+      "tasa": 0.003
+    }
+  ],
+  "candidato_elegido": 1,
+  "criterio": "menor MAE de validacion; semilla busqueda 42",
+  "configuraciones_ols": 1,
+  "configuraciones_red": 3,
+  "ajustes_finales_red": 30,
+  "segundos_ols": 0.1270815999887418,
+  "segundos_busqueda": 37.67757400003029,
+  "segundos_replicas": 342.3326567999029,
+  "segundos_total": 381.4465659999987,
+  "conteos": {
+    "train": 27879,
+    "valid": 9294,
+    "test": 9294
+  },
+  "columnas_transformadas": [
+    "loan_amnt",
+    "term",
+    "emp_length",
+    "dti",
+    "delinq_2yrs",
+    "antiguedad_credito_meses",
+    "inq_last_6mths",
+    "mths_since_last_delinq",
+    "mths_since_last_record",
+    "open_acc",
+    "pub_rec",
+    "revol_util",
+    "total_acc",
+    "missingindicator_emp_length",
+    "missingindicator_mths_since_last_delinq",
+    "missingindicator_mths_since_last_record",
+    "missingindicator_revol_util",
+    "annual_inc",
+    "revol_bal",
+    "home_ownership_MORTGAGE",
+    "home_ownership_NONE",
+    "home_ownership_OTHER",
+    "home_ownership_OWN",
+    "home_ownership_RENT",
+    "purpose_car",
+    "purpose_credit_card",
+    "purpose_debt_consolidation",
+    "purpose_educational",
+    "purpose_home_improvement",
+    "purpose_house",
+    "purpose_major_purchase",
+    "purpose_medical",
+    "purpose_moving",
+    "purpose_other",
+    "purpose_renewable_energy",
+    "purpose_small_business",
+    "purpose_vacation",
+    "purpose_wedding"
+  ],
+  "nota": "Particiones aleatorias fijas; presupuesto distinto OLS/red declarado; no son pruebas temporales"
+}

@@ -1,0 +1,125 @@
+{
+  "config": {
+    "semilla": 42,
+    "datos": {
+      "ruta": "data/processed/lgd_limpio.parquet",
+      "objetivo": "lgd",
+      "particion": "particion",
+      "fraccion_demo": 0.2,
+      "recortar_objetivo": [
+        0,
+        1
+      ],
+      "numericas": [
+        "loan_amnt",
+        "term",
+        "emp_length",
+        "annual_inc",
+        "dti",
+        "delinq_2yrs",
+        "antiguedad_credito_meses",
+        "inq_last_6mths",
+        "mths_since_last_delinq",
+        "mths_since_last_record",
+        "open_acc",
+        "pub_rec",
+        "revol_bal",
+        "revol_util",
+        "total_acc"
+      ],
+      "logaritmicas": [
+        "annual_inc",
+        "revol_bal"
+      ],
+      "categoricas": [
+        "home_ownership",
+        "purpose"
+      ]
+    },
+    "red": {
+      "capas_ocultas": [
+        32,
+        16
+      ],
+      "activacion": "relu",
+      "salida": "sigmoide",
+      "perdida": "ecm",
+      "l2": 0.0001,
+      "dropout": 0.1
+    },
+    "entrenamiento": {
+      "optimizador": "adam",
+      "tasa": 0.001,
+      "epocas": 200,
+      "tam_lote": 256,
+      "paciencia": 10
+    },
+    "salida": {
+      "carpeta": "models/lgd"
+    }
+  },
+  "demo": false,
+  "semilla": 0,
+  "candidato": {
+    "capas_ocultas": [
+      32,
+      16
+    ],
+    "activacion": "relu",
+    "l2": 0.0001,
+    "dropout": 0.1,
+    "tasa": 0.001
+  },
+  "metricas": {
+    "train": {
+      "mae": 0.13857498906349122,
+      "rmse": 0.18136054962845127,
+      "media_observada": 0.7482074499678459,
+      "media_predicha": 0.7494837172261514,
+      "ks_distribuciones": 0.2730729222712436,
+      "n": 27879
+    },
+    "valid": {
+      "mae": 0.13963406074250134,
+      "rmse": 0.18180719426782752,
+      "media_observada": 0.7511661192244681,
+      "media_predicha": 0.7498824255760519,
+      "ks_distribuciones": 0.2767376802238003,
+      "n": 9294
+    },
+    "test": {
+      "mae": 0.1414193332836765,
+      "rmse": 0.18501696060009518,
+      "media_observada": 0.7498831834514141,
+      "media_predicha": 0.7496456373839832,
+      "ks_distribuciones": 0.27824402840542284,
+      "n": 9294
+    }
+  },
+  "mejor_epoca": 47,
+  "parametros_entrenables": 1793,
+  "distribucion_test": {
+    "observada": {
+      "media": 0.7498831834514141,
+      "desviacion": 0.20177145967107302,
+      "q05": 0.32749351478008537,
+      "q10": 0.4498237743589743,
+      "q25": 0.6502357976190476,
+      "q50": 0.8096924255901471,
+      "q75": 0.904447556780227,
+      "q90": 0.9547031726708074,
+      "q95": 0.9743259853171156
+    },
+    "predicha": {
+      "media": 0.7496456373839832,
+      "desviacion": 0.08042701661839195,
+      "q05": 0.644054453595442,
+      "q10": 0.6572542016921505,
+      "q25": 0.6819580435699809,
+      "q50": 0.7248750678993535,
+      "q75": 0.8308399626543099,
+      "q90": 0.8624472826897405,
+      "q95": 0.8763454886131067
+    }
+  }
+}

@@ -17,7 +17,8 @@ from scripts.parte2_lgd.entrenar_lgd import guardar
 
 
 def ejecutar(ruta='data/processed/lgd_limpio.parquet', salida='reports/experimentos_lgd',
-             demo=False, epocas=200, semillas=None, candidatos=None, config='config.ini'):
+             demo=False, epocas=200, semillas=None, candidatos=None, config='config.ini',
+             semilla_busqueda=42):
     """Selecciona solo con validación; test se usa al evaluar la configuración final.
 
     Una referencia OLS; búsqueda finita de redes con semilla 42; réplicas finales
@@ -80,7 +81,7 @@ def ejecutar(ruta='data/processed/lgd_limpio.parquet', salida='reports/experimen
 
     busqueda = []
     for i,candidato in enumerate(candidatos):
-        red,segundos = ajustar(candidato,42)
+        red,segundos = ajustar(candidato,semilla_busqueda)
         busqueda.append(dict(candidato=i,mae_valid=mae(y['valid'],red.predecir(X['valid'])),
                              segundos=segundos,parametros=red.contar_parametros()))
     tabla_busqueda = pd.DataFrame(busqueda)
@@ -123,6 +124,25 @@ def ejecutar(ruta='data/processed/lgd_limpio.parquet', salida='reports/experimen
     (out/'experimento.json').write_text(json.dumps(manifiesto,indent=2),encoding='utf-8')
     return dict(salida=out,referencia=pd.DataFrame([metricas_ols]),busqueda=tabla_busqueda,
                 corridas=corridas,resumen=resumen,manifiesto=manifiesto)
+
+
+def ejecutar_busqueda_y_semillas_lgd(datos=None, semilla_busqueda=42, semillas_evaluacion=None,
+                                     salida='reports/experimentos_lgd', **kwargs):
+    """Alias compatible con la Opción C del README."""
+    if semillas_evaluacion is None:
+        semillas_evaluacion = list(range(42, 72))
+    if isinstance(datos, pd.DataFrame):
+        temp_dir = Path('data/processed')
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        temp_path = temp_dir / 'lgd_limpio.parquet'
+        if not temp_path.exists():
+            datos.to_parquet(temp_path, index=False)
+        ruta = str(temp_path)
+    elif isinstance(datos, (str, Path)):
+        ruta = str(datos)
+    else:
+        ruta = 'data/processed/lgd_limpio.parquet'
+    return ejecutar(ruta=ruta, salida=salida, semillas=semillas_evaluacion, semilla_busqueda=semilla_busqueda, **kwargs)
 
 
 if __name__ == '__main__':

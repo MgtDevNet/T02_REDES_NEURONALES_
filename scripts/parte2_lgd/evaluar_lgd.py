@@ -1,4 +1,10 @@
 """Regenera métricas, tablas y figuras desde predicciones guardadas, sin reentrenar."""
+
+import sys
+from pathlib import Path
+_RAIZ = Path(__file__).resolve().parents[2]
+if str(_RAIZ) not in sys.path:
+    sys.path.insert(0, str(_RAIZ))
 import argparse
 import json
 from pathlib import Path

@@ -42,3 +42,5 @@ datos/
 # Caché local de las pruebas
 .pytest_cache/
 loan.csv
+
+*.pdf
