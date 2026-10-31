@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redes neuronales para datos tabulares: ¿me prestas? | Trabajo 2</title>
+<meta name="description" content="Informe técnico del Trabajo 2 de Redes Neuronales y Algoritmos Bio-Inspirados, Universidad Nacional de Colombia.">
+<link rel="icon" href="{{ESCUDO}}">
+<style>
+:root{--fondo:#f6f4ef;--tinta:#20201d;--suave:#5e5c55;--linea:#dcd8ce;--acento:#94182c;--hoja:#fff;--barra:300px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;background:var(--fondo);color:var(--tinta);font:16px/1.55 Georgia,"Times New Roman",serif}
+a{color:inherit}
+.portada{text-align:center;padding:56px 20px 44px;border-bottom:1px solid var(--linea)}
+.portada img{width:112px;height:auto}
+.curso{margin:18px 0 6px;font:600 13px/1.4 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--acento)}
+h1{margin:0 auto;max-width:780px;font-size:clamp(32px,6vw,54px);line-height:1.1;font-weight:700}
+.sub{margin:14px 0 0;font-size:19px;color:var(--suave)}
+.autores{margin:26px auto 0;max-width:720px;font-size:16px;text-wrap:balance}
+.lugar{margin:12px 0 0;font:14px/1.5 system-ui,sans-serif;color:var(--suave)}
+.acciones{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:26px}
+.acciones a{padding:9px 15px;border:1px solid var(--tinta);border-radius:4px;background:transparent;font:600 14px/1.2 system-ui,sans-serif;text-decoration:none}
+.acciones a:first-child{background:var(--tinta);color:var(--fondo)}
+.acciones a:hover{border-color:var(--acento);background:var(--acento);color:#fff}
+.marco{display:grid;grid-template-columns:var(--barra) minmax(0,1fr);max-width:1240px;margin:0 auto;gap:36px;padding:28px 24px 72px;align-items:start}
+nav{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;font:14px/1.35 system-ui,sans-serif;padding-right:10px}
+nav summary{cursor:pointer;font-weight:700;padding:6px 0}
+nav ul{list-style:none;margin:0;padding:0}
+nav ul ul{padding-left:12px;border-left:1px solid var(--linea);margin-left:2px}
+nav li a{display:block;padding:4px 6px;border-radius:3px;text-decoration:none;color:var(--suave)}
+nav li.n1>a{color:var(--tinta);font-weight:700;margin-top:8px}
+nav li.n3{display:none}
+nav li.activa>a,nav li a:hover{background:#ebe6da;color:var(--acento)}
+nav li.abierta>ul>li.n3{display:block}
+nav details.extra{border-top:1px solid var(--linea);margin-top:12px;padding-top:6px}
+main{min-width:0}
+.articulo{background:var(--hoja);box-shadow:0 1px 3px rgba(0,0,0,.08);padding:30px clamp(0px,3vw,34px)}
+.hoja{position:relative;width:100%;container-type:inline-size;margin:0 auto}
+.hoja img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.texto{position:absolute;inset:0;overflow:hidden}
+.texto span{position:absolute;display:block;color:transparent;white-space:pre;line-height:1;overflow:hidden}
+.texto span::selection{background:rgba(148,24,44,.25);color:transparent}
+.hoja>a{position:absolute;z-index:2;border-radius:2px}
+.hoja>a:hover{background:rgba(148,24,44,.12)}
+.hoja>a:focus-visible{outline:2px solid var(--acento)}
+.ancla{position:absolute;left:0;width:1px;height:1px;margin:0;overflow:hidden;clip-path:inset(50%)}
+footer{text-align:center;padding:0 20px 44px;font:14px/1.5 system-ui,sans-serif;color:var(--suave)}
+.arriba{position:fixed;right:18px;bottom:18px;width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:var(--tinta);color:#fff;text-decoration:none;font:700 18px system-ui,sans-serif;opacity:.85}
+@media (max-width:920px){
+  .marco{grid-template-columns:1fr;padding:18px 0 72px;gap:14px}
+  nav{position:static;max-height:none;margin:0 16px;background:var(--hoja);border:1px solid var(--linea);padding:6px 12px;overflow:visible}
+  nav #menu:not([open]) ul{display:none}
+  .articulo{padding:14px 0}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{nav,.acciones,.arriba{display:none}.marco{display:block}}
+</style>
+</head>
+<body>
+<header class="portada">
+  <img src="{{ESCUDO}}" alt="Escudo de la Universidad Nacional de Colombia" width="112">
+  <p class="curso">Redes Neuronales y Algoritmos Bio-Inspirados</p>
+  <h1>Trabajo 2</h1>
+  <p class="sub">Redes neuronales para datos tabulares: ¿me prestas?</p>
+  <p class="autores">Juan Manuel Diaz Larrea · Kevin Hair González Duarte · Manuel Gutierrez Tangarife · Mariana Ruiz Zamora · Maria Fernanda Valencia Jimenez</p>
+  <p class="lugar">Universidad Nacional de Colombia · Facultad de Minas<br>Departamento de Ciencias de la Computación y de la Decisión<br>Medellín, Colombia · Semestre 2026-02 · 30 de octubre de 2026</p>
+  <div class="acciones">
+    <a href="#contenido">Leer el informe</a>
+    <a href="informe.pdf" download>Descargar PDF</a>
+    <a href="https://github.com/MgtDevNet/T02_REDES_NEURONALES_" target="_blank" rel="noopener">Repositorio</a>
+    <a href="https://www.youtube.com/watch?v=cy8w_VjKIy0" target="_blank" rel="noopener">Video promocional</a>
+  </div>
+</header>
+<div class="marco" id="contenido">
+  <nav aria-label="Índice">
+    <details id="menu" open><summary>Índice</summary>{{INDICE}}</details>
+    <details class="extra"><summary>Índice de figuras</summary><ul>{{FIGURAS}}</ul></details>
+    <details class="extra"><summary>Índice de cuadros</summary><ul>{{CUADROS}}</ul></details>
+  </nav>
+  <main><article class="articulo">{{CUERPO}}</article></main>
+</div>
+<footer>Trabajo 2 · Redes Neuronales y Algoritmos Bio-Inspirados · Universidad Nacional de Colombia · 2026</footer>
+<a class="arriba" href="#" aria-label="Volver arriba">↑</a>
+<script>
+(function(){
+  var movil=window.matchMedia('(max-width:920px)');
+  var menu=document.getElementById('menu');
+  if(movil.matches)menu.removeAttribute('open');
+  menu.addEventListener('click',function(e){if(e.target.tagName==='A'&&movil.matches)menu.removeAttribute('open')});
+  var enlaces={};
+  document.querySelectorAll('#menu a').forEach(function(a){enlaces[a.getAttribute('href').slice(1)]=a});
+  var titulos=[].slice.call(document.querySelectorAll('.titulo'));
+  var nav=document.querySelector('nav'),activo=null;
+  function marcar(id){
+    if(id===activo||!enlaces[id])return;
+    activo=id;
+    document.querySelectorAll('nav li.activa,nav li.abierta').forEach(function(l){l.classList.remove('activa','abierta')});
+    var li=enlaces[id].parentElement;
+    li.classList.add('activa');
+    for(var p=li;p&&p!==nav;p=p.parentElement)if(p.tagName==='LI')p.classList.add('abierta');
+    if(!movil.matches){
+      var r=enlaces[id].getBoundingClientRect(),n=nav.getBoundingClientRect();
+      if(r.top<n.top||r.bottom>n.bottom)nav.scrollTop+=r.top-n.top-n.height/3;
+    }
+  }
+  var espera=false;
+  function revisar(){
+    espera=false;
+    var actual=null;
+    for(var i=0;i<titulos.length;i++){
+      if(titulos[i].getBoundingClientRect().top<=window.innerHeight*.3)actual=titulos[i].id;else break;
+    }
+    if(actual)marcar(actual);
+  }
+  window.addEventListener('scroll',function(){if(!espera){espera=true;requestAnimationFrame(revisar)}},{passive:true});
+  revisar();
+})();
+</script>
+</body>
+</html>
