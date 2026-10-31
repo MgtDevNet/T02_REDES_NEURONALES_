@@ -16,6 +16,12 @@ Guarda en la carpeta de salida:
     metadata.json            variables, configuración, métricas, distribuciones y tiempos
 """
 
+import sys
+from pathlib import Path
+_RAIZ = Path(__file__).resolve().parents[2]
+if str(_RAIZ) not in sys.path:
+    sys.path.insert(0, str(_RAIZ))
+
 import argparse
 import copy
 import json

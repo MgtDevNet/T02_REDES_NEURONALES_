@@ -39,4 +39,4 @@ def test_area_bajo_la_curva_roc_coincide_con_el_auc():
     p = rng.random(500) + 0.3 * y
     fpr, tpr = curva_roc(y, p)
     assert (fpr[0], tpr[0], fpr[-1], tpr[-1]) == (0, 0, 1, 1)
-    assert abs(np.trapezoid(tpr, fpr) - metricas.auc(y, p)) < 1e-9
+    assert abs(getattr(np, 'trapezoid', getattr(np, 'trapz', None))(tpr, fpr) - metricas.auc(y, p)) < 1e-9

@@ -125,6 +125,25 @@ def ejecutar(ruta='data/processed/lgd_limpio.parquet', salida='reports/experimen
                 corridas=corridas,resumen=resumen,manifiesto=manifiesto)
 
 
+def ejecutar_busqueda_y_semillas_lgd(datos=None, semilla_busqueda=42, semillas_evaluacion=None,
+                                     salida='reports/experimentos_lgd', **kwargs):
+    """Alias compatible con la Opción C del README."""
+    if semillas_evaluacion is None:
+        semillas_evaluacion = list(range(42, 72))
+    if isinstance(datos, pd.DataFrame):
+        temp_dir = Path('data/processed')
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        temp_path = temp_dir / 'lgd_limpio.parquet'
+        if not temp_path.exists():
+            datos.to_parquet(temp_path, index=False)
+        ruta = str(temp_path)
+    elif isinstance(datos, (str, Path)):
+        ruta = str(datos)
+    else:
+        ruta = 'data/processed/lgd_limpio.parquet'
+    return ejecutar(ruta=ruta, salida=salida, semillas=semillas_evaluacion, **kwargs)
+
+
 if __name__ == '__main__':
     import argparse
     parser=argparse.ArgumentParser(description=__doc__)

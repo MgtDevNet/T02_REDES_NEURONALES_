@@ -4,6 +4,12 @@ El archivo de entradas debe tener una fila por crédito, id único, funded_amnt
  y las predictoras con los tipos numéricos/categóricos usados al entrenar.
 No recibe directamente loan.csv: requiere convertir term, emp_length y fechas.
 """
+
+import sys
+from pathlib import Path
+_RAIZ = Path(__file__).resolve().parents[2]
+if str(_RAIZ) not in sys.path:
+    sys.path.insert(0, str(_RAIZ))
 import argparse
 from pathlib import Path
 
