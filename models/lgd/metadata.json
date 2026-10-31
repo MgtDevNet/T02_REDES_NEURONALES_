@@ -134,7 +134,7 @@
   "parametros_entrenables": 1793,
   "mejor_epoca": 56,
   "epocas_entrenadas": 66,
-  "segundos_entrenamiento": 4.669174399226904,
+  "segundos_entrenamiento": 17.084644800022943,
   "metricas": {
     "train": {
       "mae": 0.13842878549543844,
